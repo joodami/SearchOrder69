@@ -58,6 +58,13 @@ function showData(dataArray) {
 
   dataTable = $("#data-table").DataTable({
     data: dataArray,
+
+    /* ⭐ สำคัญ */
+    autoWidth: false,
+    responsive: false,
+    searchDelay: 0,
+    pagingType: "full_numbers",
+
     order: [[0, "desc"]],
     columnDefs: [
       { targets: [0, 2, 3], className: "text-center" }
@@ -81,23 +88,28 @@ function showData(dataArray) {
             }
             return `
               <a href="${data}" target="_blank"
-                 class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                class="btn btn-sm btn-outline-primary mr-1">🔍</a>
               <a href="${download}"
-                 class="btn btn-sm btn-outline-success">📥</a>
+                class="btn btn-sm btn-outline-success">📥</a>
             `;
           }
           return "";
         }
       }
     ],
+
+    /* ⭐ DOM เหมือน GAS */
+    dom:
+      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+
     language: {
-      processing: "กำลังประมวลผล...",
       search: "ค้นหาคำสั่ง:",
       lengthMenu: "แสดง _MENU_ รายการ",
       info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
       infoEmpty: "แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
       infoFiltered: "(กรองจากทั้งหมด _MAX_ รายการ)",
-      loadingRecords: "กำลังโหลดข้อมูล...",
       zeroRecords: "ไม่พบข้อมูลที่ค้นหา",
       emptyTable: "ไม่มีข้อมูลในตาราง",
       paginate: {
@@ -105,21 +117,17 @@ function showData(dataArray) {
         previous: "ก่อนหน้า",
         next: "ถัดไป",
         last: "หน้าสุดท้าย"
-      },
-      aria: {
-        sortAscending: ": เรียงจากน้อยไปมาก",
-        sortDescending: ": เรียงจากมากไปน้อย"
       }
     }
   });
 
-  /* ===== SEARCH EVENT ===== */
+  /* ⭐ search behavior เหมือนต้นฉบับ */
   dataTable.on("search.dt", function () {
-    document
-      .getElementById("resetBtn")
+    document.getElementById("resetBtn")
       .classList.toggle("d-none", dataTable.search() === "");
   });
 }
+
 
 /* ================= SAVE ================= */
 function submitFormModal() {
