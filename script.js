@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec"; // ✅ ใส่ URL ของคุณ
 let dataTable;
 
 /* ================= UTIL ================= */
@@ -7,16 +7,12 @@ function getCurrentThaiYear() {
 }
 
 function formatThaiDate(value) {
-  // ถ้าเป็น Date object หรือ ISO string
-  if (value instanceof Date || (typeof value === "string" && value.includes("T"))) {
-    const d = new Date(value);
-    return d.toLocaleDateString("th-TH", {
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    });
+  if (!value) return "";
+  if (value instanceof Date) return value.toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
+  if (typeof value === "string" && value.includes("T")) {
+    return new Date(value).toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
   }
-  return value || "";
+  return value;
 }
 
 function updateCurrentYearBadge(year) {
@@ -25,9 +21,9 @@ function updateCurrentYearBadge(year) {
 }
 
 /* ================= API ================= */
-function api(action, payload = {}) {
+function api(action, payload={}) {
   return fetch(GAS_URL, {
-    method: "POST",
+    method:"POST",
     body: JSON.stringify({ action, payload })
   }).then(res => res.json());
 }
@@ -38,11 +34,11 @@ function loadYears() {
     const sel = document.getElementById("yearSelect");
     sel.innerHTML = "";
 
-    years.sort((a, b) => b - a);
-    years.forEach(y => {
+    years.sort((a,b)=>b-a);
+    years.forEach(y=>{
       const opt = document.createElement("option");
-      opt.value = y;
-      opt.text = y;
+      opt.value=y;
+      opt.text=y;
       sel.appendChild(opt);
     });
 
@@ -54,9 +50,9 @@ function loadYears() {
 
 /* ================= LOAD DATA ================= */
 function loadData() {
+  const yearSelect = document.getElementById("yearSelect");
   const year = yearSelect.value;
-  document.getElementById("titleYear").innerText =
-    "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
+  document.getElementById("titleYear").innerText = "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
 
   updateCurrentYearBadge(year);
 
@@ -65,11 +61,8 @@ function loadData() {
 
 /* ================= TABLE ================= */
 function showData(dataArray) {
-  if ($.fn.DataTable.isDataTable("#data-table")) {
-    $("#data-table").DataTable().clear().destroy();
-  }
+  if ($.fn.DataTable.isDataTable("#data-table")) $("#data-table").DataTable().clear().destroy();
 
-  // ⭐ แปลงวันที่ให้เป็นข้อความก่อนส่งเข้า DataTable
   const fixedData = dataArray.map(r => [
     r[0],
     r[1],
@@ -79,61 +72,46 @@ function showData(dataArray) {
 
   dataTable = $("#data-table").DataTable({
     data: fixedData,
-    autoWidth: false,
-    responsive: false,
-    pagingType: "full_numbers",
-    order: [[0, "desc"]],
-    columnDefs: [
-      { targets: [0, 2, 3], className: "text-center" }
-    ],
-    columns: [
-      { title: "คำสั่งที่", width: "8%" },
-      { title: "เรื่อง", width: "50%" },
-      { title: "สั่ง ณ วันที่", width: "15%" },
+    autoWidth:false,
+    responsive:false,
+    pagingType:"full_numbers",
+    order:[[0,"desc"]],
+    columnDefs:[{targets:[0,2,3], className:"text-center"}],
+    columns:[
+      { title:"คำสั่งที่", width:"8%" },
+      { title:"เรื่อง", width:"50%" },
+      { title:"สั่ง ณ วันที่", width:"15%" },
       {
-        title: "ไฟล์",
-        width: "12%",
-        render: function (data, type) {
-          if (type === "display" && data) {
+        title:"ไฟล์",
+        width:"12%",
+        render: function(data,type){
+          if(type==="display" && data){
             let download = data;
-            if (data.includes("drive.google.com")) {
+            if(data.includes("drive.google.com")){
               const id = data.match(/[-\w]{25,}/);
-              if (id) {
-                download =
-                  "https://drive.google.com/uc?export=download&id=" + id[0];
-              }
+              if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
             }
-            return `
-              <a href="${data}" target="_blank"
-                 class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-              <a href="${download}"
-                 class="btn btn-sm btn-outline-success">📥</a>
-            `;
+            return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                    <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>`;
           }
           return "";
         }
       }
     ],
-    language: {
-      search: "ค้นหาคำสั่ง:",
-      lengthMenu: "แสดง _MENU_ รายการ",
-      info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-      infoEmpty: "แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
-      infoFiltered: "(กรองจากทั้งหมด _MAX_ รายการ)",
-      zeroRecords: "ไม่พบข้อมูลที่ค้นหา",
-      emptyTable: "ไม่มีข้อมูลในตาราง",
-      paginate: {
-        first: "หน้าแรก",
-        previous: "ก่อนหน้า",
-        next: "ถัดไป",
-        last: "หน้าสุดท้าย"
-      }
+    language:{
+      search:"ค้นหาคำสั่ง:",
+      lengthMenu:"แสดง _MENU_ รายการ",
+      info:"แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+      infoEmpty:"แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
+      infoFiltered:"(กรองจากทั้งหมด _MAX_ รายการ)",
+      zeroRecords:"ไม่พบข้อมูลที่ค้นหา",
+      emptyTable:"ไม่มีข้อมูลในตาราง",
+      paginate:{first:"หน้าแรก",previous:"ก่อนหน้า",next:"ถัดไป",last:"หน้าสุดท้าย"}
     }
   });
 
-  dataTable.on("search.dt", function () {
-    document.getElementById("resetBtn")
-      .classList.toggle("d-none", dataTable.search() === "");
+  dataTable.on("search.dt", function(){
+    document.getElementById("resetBtn").classList.toggle("d-none", dataTable.search()==="");
   });
 }
 
@@ -141,57 +119,42 @@ function showData(dataArray) {
 function submitFormModal() {
   const commandNumber = commandNumberModal.value;
   const topic = topicModal.value;
-  const orderDate = orderDateModal.value; // ⭐ เป็นข้อความ
-  const year = yearSelect.value;
+  const orderDate = orderDateModal.value;
+  const year = document.getElementById("yearSelect").value;
   const fileInput = fileInputModal;
 
-  if (!commandNumber || !topic || !orderDate) {
+  if(!commandNumber || !topic || !orderDate){
     alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
     return;
   }
 
-  function save(fileUrl) {
-    api("save", {
-      year,
-      commandNumber,
-      topic,
-      orderDate, // ⭐ ส่งเป็นข้อความเสมอ
-      fileUrl
-    }).then(() => {
-      loadData();
-      $("#newCommandModal").modal("hide");
-
-      commandNumberModal.value = "";
-      topicModal.value = "";
-      orderDateModal.value = "";
-      fileInputModal.value = "";
-
-      const n = document.getElementById("saveNotification");
-      n.style.display = "block";
-      setTimeout(() => (n.style.display = "none"), 2500);
-    });
+  function save(fileUrl){
+    api("save", { year, commandNumber, topic, orderDate, fileUrl })
+      .then(()=>{
+        loadData();
+        $("#newCommandModal").modal("hide");
+        commandNumberModal.value="";
+        topicModal.value="";
+        orderDateModal.value="";
+        fileInputModal.value="";
+        const n=document.getElementById("saveNotification");
+        n.style.display="block";
+        setTimeout(()=>n.style.display="none",2500);
+      });
   }
 
-  if (fileInput.files.length > 0) {
-    const f = fileInput.files[0];
-    const r = new FileReader();
-    r.onload = e => {
-      api("upload", {
-        name: f.name,
-        mime: f.type,
-        base64: e.target.result.split(",")[1]
-      }).then(save);
-    };
+  if(fileInput.files.length>0){
+    const f=fileInput.files[0];
+    const r=new FileReader();
+    r.onload=e=>api("upload",{name:f.name,mime:f.type,base64:e.target.result.split(",")[1]}).then(save);
     r.readAsDataURL(f);
-  } else {
-    save("");
-  }
+  } else save("");
 }
 
 /* ================= INIT ================= */
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function(){
   loadYears();
-  document.getElementById("resetBtn").addEventListener("click", function () {
-    dataTable.search("").draw();
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if(dataTable) dataTable.search("").draw();
   });
 });
