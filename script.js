@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec"; // ✅ ใส่ URL ของคุณ
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
 let dataTable;
 
 /* ================= UTIL ================= */
@@ -9,9 +9,7 @@ function getCurrentThaiYear() {
 function formatThaiDate(value) {
   if (!value) return "";
   if (value instanceof Date) return value.toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
-  if (typeof value === "string" && value.includes("T")) {
-    return new Date(value).toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
-  }
+  if (typeof value === "string" && value.includes("T")) return new Date(value).toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
   return value;
 }
 
@@ -53,7 +51,6 @@ function loadData() {
   const yearSelect = document.getElementById("yearSelect");
   const year = yearSelect.value;
   document.getElementById("titleYear").innerText = "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
-
   updateCurrentYearBadge(year);
 
   api("getData", { year }).then(showData);
@@ -63,38 +60,24 @@ function loadData() {
 function showData(dataArray) {
   if ($.fn.DataTable.isDataTable("#data-table")) $("#data-table").DataTable().clear().destroy();
 
-  const fixedData = dataArray.map(r => [
-    r[0],
-    r[1],
-    formatThaiDate(r[2]),
-    r[3]
-  ]);
+  const fixedData = dataArray.map(r => [ r[0], r[1], formatThaiDate(r[2]), r[3] ]);
 
   dataTable = $("#data-table").DataTable({
     data: fixedData,
-    autoWidth:false,
-    responsive:false,
-    pagingType:"full_numbers",
     order:[[0,"desc"]],
-    columnDefs:[{targets:[0,2,3], className:"text-center"}],
     columns:[
-      { title:"คำสั่งที่", width:"8%" },
-      { title:"เรื่อง", width:"50%" },
-      { title:"สั่ง ณ วันที่", width:"15%" },
+      { title:"คำสั่งที่" },
+      { title:"เรื่อง" },
+      { title:"สั่ง ณ วันที่" },
       {
         title:"ไฟล์",
-        width:"12%",
-        render: function(data,type){
-          if(type==="display" && data){
-            let download = data;
-            if(data.includes("drive.google.com")){
-              const id = data.match(/[-\w]{25,}/);
-              if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
-            }
-            return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-                    <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>`;
-          }
-          return "";
+        render: function(data){
+          if(!data) return "";
+          let download = data;
+          const id = data.match(/[-\w]{25,}/);
+          if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
+          return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                  <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>`;
         }
       }
     ],
@@ -110,7 +93,7 @@ function showData(dataArray) {
     }
   });
 
-  dataTable.on("search.dt", function(){
+  dataTable.on("search.dt", ()=>{
     document.getElementById("resetBtn").classList.toggle("d-none", dataTable.search()==="");
   });
 }
