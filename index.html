@@ -5,12 +5,10 @@
   <title>ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="style.css">
@@ -20,7 +18,7 @@
 <div class="container">
   <br>
   <div class="header-box text-center mb-4">
-    <img src="https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87.png"
+    <img src="https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%AB%E0%B8%B1%E0%B8%87.png"
          class="school-logo">
     <h5 id="titleYear">ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</h5>
   </div>
@@ -28,17 +26,26 @@
   <div class="form-group d-flex justify-content-center">
     <div class="input-group w-auto align-items-center">
       <div class="input-group-prepend">
-        <span class="input-group-text bg-white">📅 <strong class="ml-1">เลือกปีการศึกษา</strong></span>
+        <span class="input-group-text bg-white">
+          📅 <strong class="ml-1">เลือกปีการศึกษา</strong>
+        </span>
       </div>
+
+      <!-- ⭐ สำคัญ -->
       <select id="yearSelect" class="form-control" onchange="loadData()"></select>
+
       <div class="input-group-append">
-        <span class="badge badge-success ml-2 align-self-center" id="currentYearBadge">ปีปัจจุบัน</span>
+        <span class="badge badge-success ml-2 align-self-center" id="currentYearBadge">
+          ปีปัจจุบัน
+        </span>
       </div>
     </div>
   </div>
 
   <div class="mb-3 d-flex justify-content-end">
-    <button class="btn btn-info" data-toggle="modal" data-target="#newCommandModal">➕ เพิ่มคำสั่งใหม่</button>
+    <button class="btn btn-info" data-toggle="modal" data-target="#newCommandModal">
+      ➕ เพิ่มคำสั่งใหม่
+    </button>
   </div>
 
   <div class="card shadow-sm">
@@ -51,7 +58,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal เพิ่มข้อมูล -->
 <div class="modal fade" id="newCommandModal">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -71,7 +78,7 @@
           </div>
           <div class="form-group col-md-3">
             <label>สั่ง ณ วันที่</label>
-            <input class="form-control" id="orderDateModal">
+            <input class="form-control" id="orderDateModal" placeholder="เช่น 1 มกราคม 2568">
           </div>
           <div class="form-group col-md-3">
             <label>ไฟล์</label>
@@ -89,12 +96,10 @@
 
 <div id="saveNotification">บันทึกเรียบร้อยแล้ว</div>
 
-<!-- JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <script src="script.js"></script>
 </body>
 </html>
