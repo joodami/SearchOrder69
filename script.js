@@ -8,9 +8,9 @@ function getCurrentThaiYear() {
 
 function formatThaiDate(value) {
   if (!value) return "";
-  // ถ้าเป็น Date ให้แปลงปกติ
+  // ⭐ ถ้าเป็น string คืนค่าเลย (บันทึกเป็นข้อความใน Sheet)
+  if (typeof value === "string") return value;
   if (value instanceof Date) return value.toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
-  // ถ้าเป็น string ปกติ ให้คืนค่าเลย (ไม่แปลงเป็น Date)
   return value;
 }
 
@@ -32,15 +32,13 @@ function loadYears() {
   api("getYears").then(years => {
     const sel = document.getElementById("yearSelect");
     sel.innerHTML = "";
-
     years.sort((a,b)=>b-a);
     years.forEach(y=>{
       const opt = document.createElement("option");
-      opt.value=y;
-      opt.text=y;
+      opt.value = y;
+      opt.text = y;
       sel.appendChild(opt);
     });
-
     const current = getCurrentThaiYear();
     sel.value = years.includes(current) ? current : years[0];
     loadData();
@@ -53,7 +51,6 @@ function loadData() {
   const year = yearSelect.value;
   document.getElementById("titleYear").innerText = "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
   updateCurrentYearBadge(year);
-
   api("getData", { year }).then(showData);
 }
 
@@ -61,24 +58,38 @@ function loadData() {
 function showData(dataArray) {
   if ($.fn.DataTable.isDataTable("#data-table")) $("#data-table").DataTable().clear().destroy();
 
-  const fixedData = dataArray.map(r => [ r[0], r[1], formatThaiDate(r[2]), r[3] ]);
+  const fixedData = dataArray.map(r => [
+    r[0],           // คำสั่งที่
+    r[1],           // เรื่อง
+    formatThaiDate(r[2]), // ⭐ คืนค่าเป็นข้อความ
+    r[3]            // ไฟล์
+  ]);
 
   dataTable = $("#data-table").DataTable({
     data: fixedData,
+    autoWidth:false,
+    responsive:false,
+    pagingType:"full_numbers",
     order:[[0,"desc"]],
+    columnDefs:[{targets:[0,2,3], className:"text-center"}],
     columns:[
-      { title:"คำสั่งที่" },
-      { title:"เรื่อง" },
-      { title:"สั่ง ณ วันที่" },
+      { title:"คำสั่งที่", width:"8%" },
+      { title:"เรื่อง", width:"50%" },
+      { title:"สั่ง ณ วันที่", width:"15%" },
       {
         title:"ไฟล์",
-        render: function(data){
-          if(!data) return "";
-          let download = data;
-          const id = data.match(/[-\w]{25,}/);
-          if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
-          return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-                  <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>`;
+        width:"12%",
+        render: function(data,type){
+          if(type==="display" && data){
+            let download = data;
+            if(data.includes("drive.google.com")){
+              const id = data.match(/[-\w]{25,}/);
+              if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
+            }
+            return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                    <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>`;
+          }
+          return "";
         }
       }
     ],
@@ -94,7 +105,7 @@ function showData(dataArray) {
     }
   });
 
-  dataTable.on("search.dt", ()=>{
+  dataTable.on("search.dt", function(){
     document.getElementById("resetBtn").classList.toggle("d-none", dataTable.search()==="");
   });
 }
@@ -114,7 +125,7 @@ function submitFormModal() {
 
   function save(fileUrl){
     api("save", { year, commandNumber, topic, orderDate, fileUrl })
-      .then(()=>{
+      .then(()=> {
         loadData();
         $("#newCommandModal").modal("hide");
         commandNumberModal.value="";
