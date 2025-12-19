@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbz4JDg8S93MpHcgx4dXK1ISLHXcYXT_AoMvcxfIUSaPAPRAXH-3prCtv9CBYONLMWVyDQ/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
 let dataTable;
 
 function thaiYear() {
