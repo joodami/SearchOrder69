@@ -72,7 +72,22 @@ function showData(dataArray) {
     columns: [
       { title: "คำสั่งที่", width: "8%" },
       { title: "เรื่อง", width: "50%" },
-      { title: "สั่ง ณ วันที่", width: "15%" },
+      {
+  title: "สั่ง ณ วันที่",
+  width: "15%",
+  render: function (data) {
+    // ถ้าเป็น ISO Date จาก GAS
+    if (typeof data === "string" && data.includes("T")) {
+      const d = new Date(data);
+      return d.toLocaleDateString("th-TH", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+    }
+    return data; // ถ้าเป็นข้อความอยู่แล้ว
+  }
+},
       {
         title: "ไฟล์",
         width: "12%",
