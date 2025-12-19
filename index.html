@@ -18,34 +18,24 @@
 <div class="container">
   <br>
   <div class="header-box text-center mb-4">
-    <img src="https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%AB%E0%B8%B1%E0%B8%87.png"
-         class="school-logo">
+    <img src="https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%AB%E0%B8%B1%E0%B8%87.png" class="school-logo">
     <h5 id="titleYear">ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</h5>
   </div>
 
   <div class="form-group d-flex justify-content-center">
     <div class="input-group w-auto align-items-center">
       <div class="input-group-prepend">
-        <span class="input-group-text bg-white">
-          📅 <strong class="ml-1">เลือกปีการศึกษา</strong>
-        </span>
+        <span class="input-group-text bg-white">📅 <strong class="ml-1">เลือกปีการศึกษา</strong></span>
       </div>
-
-      <!-- ⭐ สำคัญ -->
       <select id="yearSelect" class="form-control" onchange="loadData()"></select>
-
       <div class="input-group-append">
-        <span class="badge badge-success ml-2 align-self-center" id="currentYearBadge">
-          ปีปัจจุบัน
-        </span>
+        <span class="badge badge-success ml-2 align-self-center" id="currentYearBadge">ปีปัจจุบัน</span>
       </div>
     </div>
   </div>
 
   <div class="mb-3 d-flex justify-content-end">
-    <button class="btn btn-info" data-toggle="modal" data-target="#newCommandModal">
-      ➕ เพิ่มคำสั่งใหม่
-    </button>
+    <button class="btn btn-info" data-toggle="modal" data-target="#newCommandModal">➕ เพิ่มคำสั่งใหม่</button>
   </div>
 
   <div class="card shadow-sm">
@@ -58,7 +48,7 @@
   </div>
 </div>
 
-<!-- Modal เพิ่มข้อมูล -->
+<!-- Modal -->
 <div class="modal fade" id="newCommandModal">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
