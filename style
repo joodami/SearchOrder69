@@ -1,0 +1,33 @@
+* { font-family: 'K2D', sans-serif; }
+body { background-color: #f8f9fa; }
+
+.header-box {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.school-logo {
+  max-width: 140px;
+  margin-bottom: 10px;
+}
+
+table.dataTable thead th {
+  background: #8B0000;
+  color: #fff;
+  text-align: center;
+}
+
+#saveNotification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: none;
+  z-index: 1050;
+}
