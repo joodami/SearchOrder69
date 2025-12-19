@@ -1,17 +1,9 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec"; // ✅ ใส่ URL ของคุณ
 let dataTable;
 
 /* ================= UTIL ================= */
 function getCurrentThaiYear() {
   return (new Date().getFullYear() + 543).toString();
-}
-
-function formatThaiDate(value) {
-  if (!value) return "";
-  // ✅ ถ้าเป็น string คืนค่าเลย (ตามที่กรอก)
-  if (typeof value === "string") return value;
-  if (value instanceof Date) return value.toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
-  return value;
 }
 
 function updateCurrentYearBadge(year) {
@@ -32,13 +24,15 @@ function loadYears() {
   api("getYears").then(years => {
     const sel = document.getElementById("yearSelect");
     sel.innerHTML = "";
+
     years.sort((a,b)=>b-a);
     years.forEach(y=>{
       const opt = document.createElement("option");
-      opt.value = y;
-      opt.text = y;
+      opt.value=y;
+      opt.text=y;
       sel.appendChild(opt);
     });
+
     const current = getCurrentThaiYear();
     sel.value = years.includes(current) ? current : years[0];
     loadData();
@@ -50,7 +44,9 @@ function loadData() {
   const yearSelect = document.getElementById("yearSelect");
   const year = yearSelect.value;
   document.getElementById("titleYear").innerText = "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
+
   updateCurrentYearBadge(year);
+
   api("getData", { year }).then(showData);
 }
 
@@ -59,10 +55,10 @@ function showData(dataArray) {
   if ($.fn.DataTable.isDataTable("#data-table")) $("#data-table").DataTable().clear().destroy();
 
   const fixedData = dataArray.map(r => [
-    r[0],                  // คำสั่งที่
-    r[1],                  // เรื่อง
-    formatThaiDate(r[2]),  // ✅ คืนค่าเป็นข้อความตามที่กรอก
-    r[3]                   // ไฟล์
+    r[0], // คำสั่งที่
+    r[1], // เรื่อง
+    r[2], // สั่ง ณ วันที่ เป็น string จาก Sheet
+    r[3]  // ไฟล์
   ]);
 
   dataTable = $("#data-table").DataTable({
@@ -72,32 +68,28 @@ function showData(dataArray) {
     pagingType:"full_numbers",
     order:[[0,"desc"]],
     columnDefs:[
-      { targets:[0,2,3], className:"text-center" }, // จัดตรงกลาง
-      { targets:1, className:"text-left" }           // เรื่องชิดซ้าย
+      {targets:[0,2,3], className:"text-center"},
+      {targets:1, className:"text-left"},
+      {targets:3, render: function(data,type){
+        if(type==="display" && data){
+          let download = data;
+          if(data.includes("drive.google.com")){
+            const id = data.match(/[-\w]{25,}/);
+            if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
+          }
+          return `<div class="d-flex justify-content-center">
+                    <a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                    <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>
+                  </div>`;
+        }
+        return "";
+      }}
     ],
     columns:[
       { title:"คำสั่งที่", width:"8%" },
       { title:"เรื่อง", width:"50%" },
       { title:"สั่ง ณ วันที่", width:"15%" },
-      {
-        title:"ไฟล์",
-        width:"12%",
-        render: function(data,type){
-          if(type==="display" && data){
-            let download = data;
-            if(data.includes("drive.google.com")){
-              const id = data.match(/[-\w]{25,}/);
-              if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
-            }
-            // ✅ ปรับให้ปุ่มอยู่ในบรรทัดเดียว
-            return `<div style="white-space: nowrap;">
-                      <a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-                      <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>
-                    </div>`;
-          }
-          return "";
-        }
-      }
+      { title:"ไฟล์", width:"12%" }
     ],
     language:{
       search:"ค้นหาคำสั่ง:",
@@ -120,7 +112,7 @@ function showData(dataArray) {
 function submitFormModal() {
   const commandNumber = commandNumberModal.value;
   const topic = topicModal.value;
-  const orderDate = orderDateModal.value; // ✅ เก็บเป็น string
+  const orderDate = orderDateModal.value;
   const year = document.getElementById("yearSelect").value;
   const fileInput = fileInputModal;
 
@@ -131,7 +123,7 @@ function submitFormModal() {
 
   function save(fileUrl){
     api("save", { year, commandNumber, topic, orderDate, fileUrl })
-      .then(()=> {
+      .then(()=>{
         loadData();
         $("#newCommandModal").modal("hide");
         commandNumberModal.value="";
