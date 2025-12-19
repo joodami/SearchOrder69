@@ -8,7 +8,7 @@ function getCurrentThaiYear() {
 
 function formatThaiDate(value) {
   if (!value) return "";
-  // ⭐ ถ้าเป็น string คืนค่าเลย (บันทึกเป็นข้อความใน Sheet)
+  // ✅ ถ้าเป็น string คืนค่าเลย (ตามที่กรอก)
   if (typeof value === "string") return value;
   if (value instanceof Date) return value.toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
   return value;
@@ -59,10 +59,10 @@ function showData(dataArray) {
   if ($.fn.DataTable.isDataTable("#data-table")) $("#data-table").DataTable().clear().destroy();
 
   const fixedData = dataArray.map(r => [
-    r[0],           // คำสั่งที่
-    r[1],           // เรื่อง
-    formatThaiDate(r[2]), // ⭐ คืนค่าเป็นข้อความ
-    r[3]            // ไฟล์
+    r[0],                  // คำสั่งที่
+    r[1],                  // เรื่อง
+    formatThaiDate(r[2]),  // ✅ คืนค่าเป็นข้อความตามที่กรอก
+    r[3]                   // ไฟล์
   ]);
 
   dataTable = $("#data-table").DataTable({
@@ -71,7 +71,10 @@ function showData(dataArray) {
     responsive:false,
     pagingType:"full_numbers",
     order:[[0,"desc"]],
-    columnDefs:[{targets:[0,2,3], className:"text-center"}],
+    columnDefs:[
+      { targets:[0,2,3], className:"text-center" }, // จัดตรงกลาง
+      { targets:1, className:"text-left" }           // เรื่องชิดซ้าย
+    ],
     columns:[
       { title:"คำสั่งที่", width:"8%" },
       { title:"เรื่อง", width:"50%" },
@@ -86,8 +89,11 @@ function showData(dataArray) {
               const id = data.match(/[-\w]{25,}/);
               if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
             }
-            return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-                    <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>`;
+            // ✅ ปรับให้ปุ่มอยู่ในบรรทัดเดียว
+            return `<div style="white-space: nowrap;">
+                      <a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                      <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>
+                    </div>`;
           }
           return "";
         }
@@ -114,7 +120,7 @@ function showData(dataArray) {
 function submitFormModal() {
   const commandNumber = commandNumberModal.value;
   const topic = topicModal.value;
-  const orderDate = orderDateModal.value;
+  const orderDate = orderDateModal.value; // ✅ เก็บเป็น string
   const year = document.getElementById("yearSelect").value;
   const fileInput = fileInputModal;
 
