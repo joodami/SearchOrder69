@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec"; // ✅ ใส่ URL ของคุณ
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
 let dataTable;
 
 /* ================= UTIL ================= */
@@ -24,7 +24,6 @@ function loadYears() {
   api("getYears").then(years => {
     const sel = document.getElementById("yearSelect");
     sel.innerHTML = "";
-
     years.sort((a,b)=>b-a);
     years.forEach(y=>{
       const opt = document.createElement("option");
@@ -32,7 +31,6 @@ function loadYears() {
       opt.text=y;
       sel.appendChild(opt);
     });
-
     const current = getCurrentThaiYear();
     sel.value = years.includes(current) ? current : years[0];
     loadData();
@@ -46,7 +44,6 @@ function loadData() {
   document.getElementById("titleYear").innerText = "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
 
   updateCurrentYearBadge(year);
-
   api("getData", { year }).then(showData);
 }
 
@@ -123,7 +120,7 @@ function submitFormModal() {
 
   function save(fileUrl){
     api("save", { year, commandNumber, topic, orderDate, fileUrl })
-      .then(()=>{
+      .then(()=> {
         loadData();
         $("#newCommandModal").modal("hide");
         commandNumberModal.value="";
