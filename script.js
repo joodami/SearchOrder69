@@ -8,8 +8,9 @@ function getCurrentThaiYear() {
 
 function formatThaiDate(value) {
   if (!value) return "";
+  // ถ้าเป็น Date ให้แปลงปกติ
   if (value instanceof Date) return value.toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
-  if (typeof value === "string" && value.includes("T")) return new Date(value).toLocaleDateString("th-TH", { day:"numeric", month:"long", year:"numeric" });
+  // ถ้าเป็น string ปกติ ให้คืนค่าเลย (ไม่แปลงเป็น Date)
   return value;
 }
 
