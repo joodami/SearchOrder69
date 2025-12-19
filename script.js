@@ -6,6 +6,19 @@ function getCurrentThaiYear() {
   return (new Date().getFullYear() + 543).toString();
 }
 
+function formatThaiDate(value) {
+  // ถ้าเป็น Date object หรือ ISO string
+  if (value instanceof Date || (typeof value === "string" && value.includes("T"))) {
+    const d = new Date(value);
+    return d.toLocaleDateString("th-TH", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }
+  return value || "";
+}
+
 function updateCurrentYearBadge(year) {
   document.getElementById("currentYearBadge").style.display =
     year === getCurrentThaiYear() ? "inline-block" : "none";
@@ -56,15 +69,19 @@ function showData(dataArray) {
     $("#data-table").DataTable().clear().destroy();
   }
 
-  dataTable = $("#data-table").DataTable({
-    data: dataArray,
+  // ⭐ แปลงวันที่ให้เป็นข้อความก่อนส่งเข้า DataTable
+  const fixedData = dataArray.map(r => [
+    r[0],
+    r[1],
+    formatThaiDate(r[2]),
+    r[3]
+  ]);
 
-    /* ⭐ สำคัญ */
+  dataTable = $("#data-table").DataTable({
+    data: fixedData,
     autoWidth: false,
     responsive: false,
-    searchDelay: 0,
     pagingType: "full_numbers",
-
     order: [[0, "desc"]],
     columnDefs: [
       { targets: [0, 2, 3], className: "text-center" }
@@ -72,22 +89,7 @@ function showData(dataArray) {
     columns: [
       { title: "คำสั่งที่", width: "8%" },
       { title: "เรื่อง", width: "50%" },
-      {
-  title: "สั่ง ณ วันที่",
-  width: "15%",
-  render: function (data) {
-    // ถ้าเป็น ISO Date จาก GAS
-    if (typeof data === "string" && data.includes("T")) {
-      const d = new Date(data);
-      return d.toLocaleDateString("th-TH", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
-    }
-    return data; // ถ้าเป็นข้อความอยู่แล้ว
-  }
-},
+      { title: "สั่ง ณ วันที่", width: "15%" },
       {
         title: "ไฟล์",
         width: "12%",
@@ -103,22 +105,15 @@ function showData(dataArray) {
             }
             return `
               <a href="${data}" target="_blank"
-                class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                 class="btn btn-sm btn-outline-primary mr-1">🔍</a>
               <a href="${download}"
-                class="btn btn-sm btn-outline-success">📥</a>
+                 class="btn btn-sm btn-outline-success">📥</a>
             `;
           }
           return "";
         }
       }
     ],
-
-    /* ⭐ DOM เหมือน GAS */
-    dom:
-      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-      "<'row'<'col-sm-12'tr>>" +
-      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-
     language: {
       search: "ค้นหาคำสั่ง:",
       lengthMenu: "แสดง _MENU_ รายการ",
@@ -136,19 +131,17 @@ function showData(dataArray) {
     }
   });
 
-  /* ⭐ search behavior เหมือนต้นฉบับ */
   dataTable.on("search.dt", function () {
     document.getElementById("resetBtn")
       .classList.toggle("d-none", dataTable.search() === "");
   });
 }
 
-
 /* ================= SAVE ================= */
 function submitFormModal() {
   const commandNumber = commandNumberModal.value;
   const topic = topicModal.value;
-  const orderDate = orderDateModal.value;
+  const orderDate = orderDateModal.value; // ⭐ เป็นข้อความ
   const year = yearSelect.value;
   const fileInput = fileInputModal;
 
@@ -162,7 +155,7 @@ function submitFormModal() {
       year,
       commandNumber,
       topic,
-      orderDate,
+      orderDate, // ⭐ ส่งเป็นข้อความเสมอ
       fileUrl
     }).then(() => {
       loadData();
