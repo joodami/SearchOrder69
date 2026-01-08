@@ -60,7 +60,7 @@ function showData(dataArray) {
 
   dataTable = $("#data-table").DataTable({
   data: fixedData,
-  responsive: true,          // ✅ เปิด responsive
+  responsive: true,
   autoWidth: false,
   pagingType: "simple",
   order: [[0,"desc"]],
@@ -91,18 +91,24 @@ function showData(dataArray) {
     { title:"เรื่อง" },
     { title:"สั่ง ณ วันที่" },
     { title:"ไฟล์" }
-  ]
-    language:{
-      search:"ค้นหาคำสั่ง:",
-      lengthMenu:"แสดง _MENU_ รายการ",
-      info:"แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-      infoEmpty:"แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
-      infoFiltered:"(กรองจากทั้งหมด _MAX_ รายการ)",
-      zeroRecords:"ไม่พบข้อมูลที่ค้นหา",
-      emptyTable:"ไม่มีข้อมูลในตาราง",
-      paginate:{first:"หน้าแรก",previous:"ก่อนหน้า",next:"ถัดไป",last:"หน้าสุดท้าย"}
+  ],
+  language:{
+    search:"ค้นหาคำสั่ง:",
+    lengthMenu:"แสดง _MENU_ รายการ",
+    info:"แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+    infoEmpty:"แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
+    infoFiltered:"(กรองจากทั้งหมด _MAX_ รายการ)",
+    zeroRecords:"ไม่พบข้อมูลที่ค้นหา",
+    emptyTable:"ไม่มีข้อมูลในตาราง",
+    paginate:{
+      first:"หน้าแรก",
+      previous:"ก่อนหน้า",
+      next:"ถัดไป",
+      last:"หน้าสุดท้าย"
     }
-  });
+  }
+});
+
 
   dataTable.on("search.dt", function(){
     document.getElementById("resetBtn").classList.toggle("d-none", dataTable.search()==="");
