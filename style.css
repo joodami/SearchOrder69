@@ -52,3 +52,37 @@ table.dataTable thead th {
     padding: 6px 10px;
   }
 }
+
+/* 📱 Card View สำหรับมือถือ */
+@media (max-width: 768px) {
+
+  table.dataTable > tbody > tr.child {
+    background: transparent;
+  }
+
+  .mobile-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    margin: 8px 0;
+  }
+
+  .card-row {
+    display: flex;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+  }
+
+  .card-label {
+    flex: 0 0 90px;
+    font-weight: 600;
+    color: #8B0000;
+  }
+
+  .card-value {
+    flex: 1;
+    word-break: break-word;
+  }
+}
+
