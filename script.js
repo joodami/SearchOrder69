@@ -60,51 +60,69 @@ function showData(dataArray) {
 
   dataTable = $("#data-table").DataTable({
   data: fixedData,
+
+  /* ===== Performance ===== */
+  deferRender: true,     // ลด DOM ตอนโหลดครั้งแรก
+  searchDelay: 500,      // หน่วงการค้นหา ลดการคำนวณ
+  pageLength: 10,        // แสดงทีละ 10 แถว
+  autoWidth: false,      // ปิดคำนวณความกว้างอัตโนมัติ
+
+  /* ===== Display ===== */
   responsive: true,
-  autoWidth: false,
   pagingType: "simple",
-  order: [[0,"desc"]],
+  order: [[0, "desc"]],
+
+  /* ===== Columns ===== */
   columnDefs: [
-    { targets:[0,2,3], className:"text-center" },
-    { targets:1, className:"text-left" },
+    { targets: [0, 2, 3], className: "text-center" },
+    { targets: 1, className: "text-left" },
     {
-      targets:3,
-      render: function(data,type){
-        if(type==="display" && data){
-          let download=data;
-          if(data.includes("drive.google.com")){
-            const id=data.match(/[-\w]{25,}/);
-            if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
+      targets: 3,
+      orderable: false,
+      render: function (data, type) {
+        if (type === "display" && data) {
+          let download = data;
+          if (data.includes("drive.google.com")) {
+            const id = data.match(/[-\w]{25,}/);
+            if (id) {
+              download =
+                "https://drive.google.com/uc?export=download&id=" + id[0];
+            }
           }
           return `
             <div class="d-flex justify-content-center">
-              <a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-              <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>
+              <a href="${data}" target="_blank"
+                 class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+              <a href="${download}"
+                 class="btn btn-sm btn-outline-success">📥</a>
             </div>`;
         }
         return "";
       }
     }
   ],
-  columns:[
-    { title:"คำสั่งที่" },
-    { title:"เรื่อง" },
-    { title:"สั่ง ณ วันที่" },
-    { title:"ไฟล์" }
+
+  columns: [
+    { title: "คำสั่งที่" },
+    { title: "เรื่อง" },
+    { title: "สั่ง ณ วันที่" },
+    { title: "ไฟล์" }
   ],
-  language:{
-    search:"ค้นหาคำสั่ง:",
-    lengthMenu:"แสดง _MENU_ รายการ",
-    info:"แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-    infoEmpty:"แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
-    infoFiltered:"(กรองจากทั้งหมด _MAX_ รายการ)",
-    zeroRecords:"ไม่พบข้อมูลที่ค้นหา",
-    emptyTable:"ไม่มีข้อมูลในตาราง",
-    paginate:{
-      first:"หน้าแรก",
-      previous:"ก่อนหน้า",
-      next:"ถัดไป",
-      last:"หน้าสุดท้าย"
+
+  /* ===== Language ===== */
+  language: {
+    search: "ค้นหาคำสั่ง:",
+    lengthMenu: "แสดง _MENU_ รายการ",
+    info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+    infoEmpty: "แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
+    infoFiltered: "(กรองจากทั้งหมด _MAX_ รายการ)",
+    zeroRecords: "ไม่พบข้อมูลที่ค้นหา",
+    emptyTable: "ไม่มีข้อมูลในตาราง",
+    paginate: {
+      first: "หน้าแรก",
+      previous: "ก่อนหน้า",
+      next: "ถัดไป",
+      last: "หน้าสุดท้าย"
     }
   }
 });
