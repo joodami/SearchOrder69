@@ -53,11 +53,36 @@ table.dataTable thead th {
   }
 }
 
-/* 📱 Card View สำหรับมือถือ */
+
+/* 📱 ปรับเฉพาะมือถือ */
 @media (max-width: 768px) {
 
+  /* ปรับหัวข้อและโลโก้ */
+  h5#titleYear {
+    font-size: 1rem;
+  }
+
+  .school-logo {
+    max-width: 90px;
+  }
+
+  /* ตารางตัวอักษรเล็กลง */
+  table.dataTable {
+    font-size: 0.85rem;
+    display: block;       /* ให้ scroll ภายใน tbody */
+    overflow-x: hidden;   /* ปิด scroll แนวนอน */
+    width: 100% !important;
+  }
+
+  /* ปรับปุ่ม */
+  .btn {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+
+  /* Card view ของมือถือ */
   table.dataTable > tbody > tr.child {
-    background: transparent;
+    background: transparent; /* ไม่ให้แถบสี */
   }
 
   .mobile-card {
@@ -66,12 +91,15 @@ table.dataTable thead th {
     padding: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,.08);
     margin: 8px 0;
+    width: 100%;          /* กว้างเต็มหน้าจอ */
+    box-sizing: border-box;
   }
 
   .card-row {
     display: flex;
     margin-bottom: 6px;
     font-size: 0.9rem;
+    flex-wrap: wrap;      /* ให้ label/value ลงบรรทัดใหม่ถ้ายาวเกิน */
   }
 
   .card-label {
@@ -85,4 +113,5 @@ table.dataTable thead th {
     word-break: break-word;
   }
 }
+
 
