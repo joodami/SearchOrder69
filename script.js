@@ -1,8 +1,9 @@
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
+
 let dataTable;
 let currentLimit = 200; // โหลดเริ่มต้น 200 แถว
-let currentOffset = 0;  // offset สำหรับโหลดเพิ่ม
-let currentData = [];   // เก็บข้อมูลเดิมเพื่อ append
+let currentOffset = 0;   // offset สำหรับโหลดเพิ่ม
+let currentData = [];    // เก็บข้อมูลเดิมเพื่อ append
 
 /* ================= UTIL ================= */
 function getCurrentThaiYear() {
@@ -18,6 +19,7 @@ function updateCurrentYearBadge(year) {
 function api(action, payload={}) {
   return fetch(GAS_URL, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action, payload })
   }).then(res => res.json());
 }
@@ -45,6 +47,10 @@ function resetAndLoadData() {
   currentOffset = 0;
   currentData = [];
   document.getElementById("loadMoreBtn").classList.add("d-none");
+  if(dataTable) {
+    dataTable.clear().destroy();
+    dataTable = null;
+  }
   loadData();
 }
 
