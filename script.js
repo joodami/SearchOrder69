@@ -59,35 +59,39 @@ function showData(dataArray) {
   ]);
 
   dataTable = $("#data-table").DataTable({
-    data: fixedData,
-    autoWidth:false,
-    responsive:false,
-    pagingType:"full_numbers",
-    order:[[0,"desc"]],
-    columnDefs:[
-      {targets:[0,2,3], className:"text-center"},
-      {targets:1, className:"text-left"},
-      {targets:3, render: function(data,type){
+  data: fixedData,
+  responsive: true,          // ✅ เปิด responsive
+  autoWidth: false,
+  pagingType: "simple",
+  order: [[0,"desc"]],
+  columnDefs: [
+    { targets:[0,2,3], className:"text-center" },
+    { targets:1, className:"text-left" },
+    {
+      targets:3,
+      render: function(data,type){
         if(type==="display" && data){
-          let download = data;
+          let download=data;
           if(data.includes("drive.google.com")){
-            const id = data.match(/[-\w]{25,}/);
+            const id=data.match(/[-\w]{25,}/);
             if(id) download="https://drive.google.com/uc?export=download&id="+id[0];
           }
-          return `<div class="d-flex justify-content-center">
-                    <a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-                    <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>
-                  </div>`;
+          return `
+            <div class="d-flex justify-content-center">
+              <a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+              <a href="${download}" class="btn btn-sm btn-outline-success">📥</a>
+            </div>`;
         }
         return "";
-      }}
-    ],
-    columns:[
-      { title:"คำสั่งที่", width:"8%" },
-      { title:"เรื่อง", width:"50%" },
-      { title:"สั่ง ณ วันที่", width:"15%" },
-      { title:"ไฟล์", width:"12%" }
-    ],
+      }
+    }
+  ],
+  columns:[
+    { title:"คำสั่งที่" },
+    { title:"เรื่อง" },
+    { title:"สั่ง ณ วันที่" },
+    { title:"ไฟล์" }
+  ]
     language:{
       search:"ค้นหาคำสั่ง:",
       lengthMenu:"แสดง _MENU_ รายการ",
