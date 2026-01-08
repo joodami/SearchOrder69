@@ -59,108 +59,99 @@ function showData(dataArray) {
   ]);
 
   dataTable = $("#data-table").DataTable({
-  data: fixedData,
+    data: fixedData,
 
-  /* ===== Performance (สำคัญมาก) ===== */
-  deferRender: true,
-  pageLength: 10,
-  searchDelay: 600,
-  autoWidth: false,
+    /* ===== Performance (สำคัญมาก) ===== */
+    deferRender: true,
+    pageLength: 10,
+    searchDelay: 600,
+    autoWidth: false,
 
-  /* ===== Responsive + Card ===== */
-  responsive: {
-    details: {
-      renderer: function (api, rowIdx, columns) {
+    /* ===== Responsive + Card ===== */
+    responsive: {
+      details: {
+        renderer: function (api, rowIdx, columns) {
 
-        // ถ้าไม่ใช่มือถือ → ใช้แบบเดิม
-        if (window.innerWidth > 768) return false;
-
-        // สร้าง Card สำหรับมือถือ
-        let data = columns.map(col => {
-          if (col.hidden) {
+          // สร้าง Card สำหรับมือถือ แสดงทุกคอลัมน์
+          let data = columns.map(col => {
             return `
               <div class="card-row">
                 <div class="card-label">${col.title}</div>
                 <div class="card-value">${col.data}</div>
               </div>`;
+          }).join("");
+
+          return `<div class="mobile-card">${data}</div>`;
+        }
+      }
+    },
+
+    pagingType: "simple",
+    order: [[0, "desc"]],
+
+    columnDefs: [
+      { targets: [0], responsivePriority: 1 },
+      { targets: [1], responsivePriority: 2 },
+      { targets: [2], responsivePriority: 3 },
+      { targets: [3], responsivePriority: 4, orderable: false },
+
+      { targets: [0,2,3], className: "text-center" },
+      { targets: 1, className: "text-left" },
+
+      {
+        targets: 3,
+        render: function (data, type) {
+          if (type === "display" && data) {
+            let download = data;
+            if (data.includes("drive.google.com")) {
+              const id = data.match(/[-\w]{25,}/);
+              if (id) {
+                download =
+                  "https://drive.google.com/uc?export=download&id=" + id[0];
+              }
+            }
+            return `
+              <div class="d-flex justify-content-center">
+                <a href="${data}" target="_blank"
+                   class="btn btn-sm btn-outline-primary mr-1">🔍</a>
+                <a href="${download}"
+                   class="btn btn-sm btn-outline-success">📥</a>
+              </div>`;
           }
           return "";
-        }).join("");
-
-        return `
-          <div class="mobile-card">
-            ${data}
-          </div>`;
-      }
-    }
-  },
-
-  pagingType: "simple",
-  order: [[0, "desc"]],
-
-  columnDefs: [
-    { targets: [0], responsivePriority: 1 },
-    { targets: [1], responsivePriority: 2 },
-    { targets: [2], responsivePriority: 3 },
-    { targets: [3], responsivePriority: 4, orderable: false },
-
-    { targets: [0,2,3], className: "text-center" },
-    { targets: 1, className: "text-left" },
-
-    {
-      targets: 3,
-      render: function (data, type) {
-        if (type === "display" && data) {
-          let download = data;
-          if (data.includes("drive.google.com")) {
-            const id = data.match(/[-\w]{25,}/);
-            if (id) {
-              download =
-                "https://drive.google.com/uc?export=download&id=" + id[0];
-            }
-          }
-          return `
-            <div class="d-flex justify-content-center">
-              <a href="${data}" target="_blank"
-                 class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-              <a href="${download}"
-                 class="btn btn-sm btn-outline-success">📥</a>
-            </div>`;
         }
-        return "";
+      }
+    ],
+
+    columns: [
+      { title: "คำสั่งที่" },
+      { title: "เรื่อง" },
+      { title: "สั่ง ณ วันที่" },
+      { title: "ไฟล์" }
+    ],
+
+    language: {
+      search: "ค้นหาคำสั่ง:",
+      lengthMenu: "แสดง _MENU_ รายการ",
+      info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+      infoEmpty: "แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
+      infoFiltered: "(กรองจากทั้งหมด _MAX_ รายการ)",
+      zeroRecords: "ไม่พบข้อมูลที่ค้นหา",
+      emptyTable: "ไม่มีข้อมูลในตาราง",
+      paginate: {
+        first: "หน้าแรก",
+        previous: "ก่อนหน้า",
+        next: "ถัดไป",
+        last: "หน้าสุดท้าย"
       }
     }
-  ],
-
-  columns: [
-    { title: "คำสั่งที่" },
-    { title: "เรื่อง" },
-    { title: "สั่ง ณ วันที่" },
-    { title: "ไฟล์" }
-  ],
-
-  language: {
-    search: "ค้นหาคำสั่ง:",
-    lengthMenu: "แสดง _MENU_ รายการ",
-    info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-    infoEmpty: "แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
-    infoFiltered: "(กรองจากทั้งหมด _MAX_ รายการ)",
-    zeroRecords: "ไม่พบข้อมูลที่ค้นหา",
-    emptyTable: "ไม่มีข้อมูลในตาราง",
-    paginate: {
-      first: "หน้าแรก",
-      previous: "ก่อนหน้า",
-      next: "ถัดไป",
-      last: "หน้าสุดท้าย"
-    }
-  }
-});
-
+  });
 
   dataTable.on("search.dt", function(){
     document.getElementById("resetBtn").classList.toggle("d-none", dataTable.search()==="");
   });
 }
+
 
 /* ================= SAVE ================= */
 function submitFormModal() {
