@@ -31,3 +31,24 @@ table.dataTable thead th {
   display: none;
   z-index: 1050;
 }
+
+/* 📱 ปรับเฉพาะมือถือ */
+@media (max-width: 768px) {
+
+  h5#titleYear {
+    font-size: 1rem;
+  }
+
+  .school-logo {
+    max-width: 90px;
+  }
+
+  table.dataTable {
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}
