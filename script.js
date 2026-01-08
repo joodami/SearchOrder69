@@ -1,6 +1,8 @@
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
 let dataTable;
-let currentLimit = 100; // โหลดเริ่มต้น 100 แถว
+let currentLimit = 200; // โหลดเริ่มต้น 200 แถว
+let currentOffset = 0;  // offset สำหรับโหลดเพิ่ม
+let currentData = [];   // เก็บข้อมูลเดิมเพื่อ append
 
 /* ================= UTIL ================= */
 function getCurrentThaiYear() {
@@ -15,7 +17,7 @@ function updateCurrentYearBadge(year) {
 /* ================= API ================= */
 function api(action, payload={}) {
   return fetch(GAS_URL, {
-    method:"POST",
+    method: "POST",
     body: JSON.stringify({ action, payload })
   }).then(res => res.json());
 }
@@ -28,17 +30,24 @@ function loadYears() {
     years.sort((a,b)=>b-a);
     years.forEach(y=>{
       const opt = document.createElement("option");
-      opt.value=y;
-      opt.text=y;
+      opt.value = y;
+      opt.text = y;
       sel.appendChild(opt);
     });
     const current = getCurrentThaiYear();
     sel.value = years.includes(current) ? current : years[0];
-    loadData();
+    resetAndLoadData();
   });
 }
 
 /* ================= LOAD DATA ================= */
+function resetAndLoadData() {
+  currentOffset = 0;
+  currentData = [];
+  document.getElementById("loadMoreBtn").classList.add("d-none");
+  loadData();
+}
+
 function loadData(limit = currentLimit) {
   const yearSelect = document.getElementById("yearSelect");
   const year = yearSelect.value;
@@ -46,8 +55,20 @@ function loadData(limit = currentLimit) {
 
   updateCurrentYearBadge(year);
 
-  api("getData", { year, limit }).then(dataArray => {
-    showData(dataArray);
+  api("getData", { year, limit, offset: currentOffset }).then(dataArray => {
+    if(!dataArray || dataArray.length === 0) return;
+
+    currentData = currentData.concat(dataArray);
+
+    if(!dataTable) {
+      // สร้าง Table ครั้งแรก
+      showData(currentData);
+    } else {
+      // append rows โดยไม่ destroy
+      dataTable.rows.add(dataArray.map(r => [r[0], r[1], r[2], r[3]])).draw(false);
+    }
+
+    currentOffset += dataArray.length;
 
     // แสดงปุ่มโหลดเพิ่มเติมเฉพาะเมื่อข้อมูลเต็ม limit
     const loadMoreBtn = document.getElementById("loadMoreBtn");
@@ -61,12 +82,8 @@ function loadData(limit = currentLimit) {
 
 /* ================= TABLE ================= */
 function showData(dataArray) {
-  if ($.fn.DataTable.isDataTable("#data-table")) $("#data-table").DataTable().clear().destroy();
-
-  const fixedData = dataArray.map(r => [r[0], r[1], r[2], r[3]]);
-
   dataTable = $("#data-table").DataTable({
-    data: fixedData,
+    data: dataArray.map(r => [r[0], r[1], r[2], r[3]]),
     
     /* ===== Performance ===== */
     deferRender: true,
@@ -173,7 +190,7 @@ function submitFormModal() {
   function save(fileUrl){
     api("save", { year, commandNumber, topic, orderDate, fileUrl })
       .then(()=> {
-        loadData();
+        resetAndLoadData();
         $("#newCommandModal").modal("hide");
         commandNumberModal.value="";
         topicModal.value="";
@@ -202,7 +219,6 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 
   document.getElementById("loadMoreBtn").addEventListener("click", function(){
-    currentLimit += 200; // เพิ่ม 200 แถวต่อครั้ง
     loadData(currentLimit);
   });
 });
