@@ -61,24 +61,54 @@ function showData(dataArray) {
   dataTable = $("#data-table").DataTable({
   data: fixedData,
 
-  /* ===== Performance ===== */
-  deferRender: true,     // ลด DOM ตอนโหลดครั้งแรก
-  searchDelay: 500,      // หน่วงการค้นหา ลดการคำนวณ
-  pageLength: 10,        // แสดงทีละ 10 แถว
-  autoWidth: false,      // ปิดคำนวณความกว้างอัตโนมัติ
+  /* ===== Performance (สำคัญมาก) ===== */
+  deferRender: true,
+  pageLength: 10,
+  searchDelay: 600,
+  autoWidth: false,
 
-  /* ===== Display ===== */
-  responsive: true,
+  /* ===== Responsive + Card ===== */
+  responsive: {
+    details: {
+      renderer: function (api, rowIdx, columns) {
+
+        // ถ้าไม่ใช่มือถือ → ใช้แบบเดิม
+        if (window.innerWidth > 768) return false;
+
+        // สร้าง Card สำหรับมือถือ
+        let data = columns.map(col => {
+          if (col.hidden) {
+            return `
+              <div class="card-row">
+                <div class="card-label">${col.title}</div>
+                <div class="card-value">${col.data}</div>
+              </div>`;
+          }
+          return "";
+        }).join("");
+
+        return `
+          <div class="mobile-card">
+            ${data}
+          </div>`;
+      }
+    }
+  },
+
   pagingType: "simple",
   order: [[0, "desc"]],
 
-  /* ===== Columns ===== */
   columnDefs: [
-    { targets: [0, 2, 3], className: "text-center" },
+    { targets: [0], responsivePriority: 1 },
+    { targets: [1], responsivePriority: 2 },
+    { targets: [2], responsivePriority: 3 },
+    { targets: [3], responsivePriority: 4, orderable: false },
+
+    { targets: [0,2,3], className: "text-center" },
     { targets: 1, className: "text-left" },
+
     {
       targets: 3,
-      orderable: false,
       render: function (data, type) {
         if (type === "display" && data) {
           let download = data;
@@ -109,7 +139,6 @@ function showData(dataArray) {
     { title: "ไฟล์" }
   ],
 
-  /* ===== Language ===== */
   language: {
     search: "ค้นหาคำสั่ง:",
     lengthMenu: "แสดง _MENU_ รายการ",
