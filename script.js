@@ -50,9 +50,12 @@ function loadData() {
     "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
 
   updateCurrentYearBadge(year);
+
+  // 🔴 แสดง spinner
+  document.getElementById("loadingSpinner").style.display = "block";
+
   api("getData", { year }).then(showData);
 }
-
 /* ================= FILE BUTTONS ================= */
 function renderFileButtons(data) {
   if (!data) return "";
@@ -134,6 +137,7 @@ function changeMobilePage(p) {
 
 /* ================= TABLE + CARD SWITCH ================= */
 function showData(dataArray) {
+  const spinner = document.getElementById("loadingSpinner"); // 🔴 เรียก spinner
 
   const fixedData = dataArray.map(r => [r[0], r[1], r[2], r[3]]);
 
@@ -207,6 +211,9 @@ function showData(dataArray) {
       this.classList.add("d-none");
     });
 
+    // 🔴 ซ่อน spinner หลังโหลด Desktop เสร็จ
+    spinner.style.display = "none";
+
     return;
   }
 
@@ -224,7 +231,11 @@ function showData(dataArray) {
   mobileData = [...originalMobileData];
   currentPage = 1;
   renderMobileCardsPage();
+
+  // 🔴 ซ่อน spinner หลังโหลด Mobile เสร็จ
+  spinner.style.display = "none";
 }
+
 
 /* ================= SAVE ================= */
 function submitFormModal() {
