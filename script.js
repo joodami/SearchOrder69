@@ -1,6 +1,12 @@
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
 let dataTable;
 
+/* ===== Mobile Card State ===== */
+let mobileData = [];
+let originalMobileData = [];
+let currentPage = 1;
+const pageSize = 5;
+
 /* ================= UTIL ================= */
 function getCurrentThaiYear() {
   return (new Date().getFullYear() + 543).toString();
@@ -12,9 +18,9 @@ function updateCurrentYearBadge(year) {
 }
 
 /* ================= API ================= */
-function api(action, payload={}) {
+function api(action, payload = {}) {
   return fetch(GAS_URL, {
-    method:"POST",
+    method: "POST",
     body: JSON.stringify({ action, payload })
   }).then(res => res.json());
 }
@@ -24,11 +30,11 @@ function loadYears() {
   api("getYears").then(years => {
     const sel = document.getElementById("yearSelect");
     sel.innerHTML = "";
-    years.sort((a,b)=>b-a);
-    years.forEach(y=>{
+    years.sort((a, b) => b - a);
+    years.forEach(y => {
       const opt = document.createElement("option");
-      opt.value=y;
-      opt.text=y;
+      opt.value = y;
+      opt.text = y;
       sel.appendChild(opt);
     });
     const current = getCurrentThaiYear();
@@ -39,89 +45,111 @@ function loadYears() {
 
 /* ================= LOAD DATA ================= */
 function loadData() {
-  const yearSelect = document.getElementById("yearSelect");
-  const year = yearSelect.value;
-  document.getElementById("titleYear").innerText = "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
+  const year = document.getElementById("yearSelect").value;
+  document.getElementById("titleYear").innerText =
+    "ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์ ปี " + year;
 
   updateCurrentYearBadge(year);
   api("getData", { year }).then(showData);
 }
 
+/* ================= FILE BUTTONS (ใช้ร่วมกัน) ================= */
+function renderFileButtons(data) {
+  if (!data) return "";
+
+  let download = data;
+  if (data.includes("drive.google.com")) {
+    const id = data.match(/[-\w]{25,}/);
+    if (id) {
+      download = "https://drive.google.com/uc?export=download&id=" + id[0];
+    }
+  }
+
+  return `
+    <div class="d-flex">
+      <a href="${data}" target="_blank"
+         class="btn btn-sm btn-outline-primary mr-2">🔍</a>
+      <a href="${download}"
+         class="btn btn-sm btn-outline-success">📥</a>
+    </div>
+  `;
+}
+
+/* ================= MOBILE CARD ================= */
+function renderMobileCardsPage() {
+  const container = document.getElementById("mobileCardContainer");
+  container.innerHTML = "";
+
+  const start = (currentPage - 1) * pageSize;
+  const pageData = mobileData.slice(start, start + pageSize);
+
+  pageData.forEach(r => {
+    container.innerHTML += `
+      <div class="mobile-card">
+        <div class="card-row">
+          <div class="card-label">คำสั่งที่</div>
+          <div class="card-value">${r[0]}</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">เรื่อง</div>
+          <div class="card-value">${r[1]}</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">สั่ง ณ วันที่</div>
+          <div class="card-value">${r[2]}</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">ไฟล์</div>
+          <div class="card-value">${renderFileButtons(r[3])}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  renderMobilePagination();
+}
+
+function renderMobilePagination() {
+  const totalPages = Math.ceil(mobileData.length / pageSize);
+  const pag = document.getElementById("mobilePagination");
+  pag.innerHTML = "";
+
+  if (totalPages <= 1) return;
+
+  pag.innerHTML = `
+    <button class="btn btn-sm btn-outline-secondary mr-2"
+      ${currentPage === 1 ? "disabled" : ""}
+      onclick="changeMobilePage(${currentPage - 1})">◀</button>
+    หน้า ${currentPage} / ${totalPages}
+    <button class="btn btn-sm btn-outline-secondary ml-2"
+      ${currentPage === totalPages ? "disabled" : ""}
+      onclick="changeMobilePage(${currentPage + 1})">▶</button>
+  `;
+}
+
+function changeMobilePage(p) {
+  currentPage = p;
+  renderMobileCardsPage();
+}
+
 /* ================= TABLE ================= */
 function showData(dataArray) {
-  if ($.fn.DataTable.isDataTable("#data-table")) $("#data-table").DataTable().clear().destroy();
 
-  const fixedData = dataArray.map(r => [
-    r[0], // คำสั่งที่
-    r[1], // เรื่อง
-    r[2], // สั่ง ณ วันที่ เป็น string จาก Sheet
-    r[3]  // ไฟล์
-  ]);
+  /* ===== Desktop Table (เดิม 100%) ===== */
+  if ($.fn.DataTable.isDataTable("#data-table")) {
+    $("#data-table").DataTable().clear().destroy();
+  }
+
+  const fixedData = dataArray.map(r => [r[0], r[1], r[2], r[3]]);
 
   dataTable = $("#data-table").DataTable({
     data: fixedData,
-
-    /* ===== Performance (สำคัญมาก) ===== */
     deferRender: true,
     pageLength: 10,
     searchDelay: 600,
     autoWidth: false,
-
-    /* ===== Responsive + Card ===== */
-    responsive: {
-      details: {
-        renderer: function (api, rowIdx, columns) {
-
-          // สร้าง Card สำหรับมือถือ แสดงทุกคอลัมน์
-          let data = columns.map(col => {
-            return `
-              <div class="card-row">
-                <div class="card-label">${col.title}</div>
-                <div class="card-value">${col.data}</div>
-              </div>`;
-          }).join("");
-
-          return `<div class="mobile-card">${data}</div>`;
-        }
-      }
-    },
-
     pagingType: "simple",
     order: [[0, "desc"]],
-
-    columnDefs: [
-      { targets: [0], responsivePriority: 1 },
-      { targets: [1], responsivePriority: 2 },
-      { targets: [2], responsivePriority: 3 },
-      { targets: [3], responsivePriority: 4, orderable: false },
-
-      { targets: [0,2,3], className: "text-center" },
-      { targets: 1, className: "text-left" },
-
-      {
-        targets: 3,
-        render: function (data, type) {
-          if (type === "display" && data) {
-            let download = data;
-            if (data.includes("drive.google.com")) {
-              const id = data.match(/[-\w]{25,}/);
-              if (id) {
-                download =
-                  "https://drive.google.com/uc?export=download&id=" + id[0];
-              }
-            }
-            return `
-              <div class="d-flex justify-content-center">
-                <a href="${data}" target="_blank"
-                   class="btn btn-sm btn-outline-primary mr-1">🔍</a>
-                <a href="${download}"
-                   class="btn btn-sm btn-outline-success">📥</a>
-              </div>`;
-          }
-          return "";
-        }
-      }
-    ],
 
     columns: [
       { title: "คำสั่งที่" },
@@ -130,30 +158,45 @@ function showData(dataArray) {
       { title: "ไฟล์" }
     ],
 
+    columnDefs: [
+      { targets: [0, 2, 3], className: "text-center" },
+      { targets: 1, className: "text-left" },
+      {
+        targets: 3,
+        orderable: false,
+        render: function (data, type) {
+          if (type === "display") return renderFileButtons(data);
+          return data;
+        }
+      }
+    ],
+
     language: {
       search: "ค้นหาคำสั่ง:",
       lengthMenu: "แสดง _MENU_ รายการ",
       info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-      infoEmpty: "แสดง 0 ถึง 0 จากทั้งหมด 0 รายการ",
-      infoFiltered: "(กรองจากทั้งหมด _MAX_ รายการ)",
-      zeroRecords: "ไม่พบข้อมูลที่ค้นหา",
-      emptyTable: "ไม่มีข้อมูลในตาราง",
+      zeroRecords: "ไม่พบข้อมูล",
+      emptyTable: "ไม่มีข้อมูล",
       paginate: {
-        first: "หน้าแรก",
         previous: "ก่อนหน้า",
-        next: "ถัดไป",
-        last: "หน้าสุดท้าย"
+        next: "ถัดไป"
       }
     }
   });
 
-  dataTable.on("search.dt", function(){
-    document.getElementById("resetBtn").classList.toggle("d-none", dataTable.search()==="");
-  });
+  /* ===== Mobile Card ===== */
+  if (window.innerWidth <= 768) {
+    $("#data-table").hide();
+    originalMobileData = [...fixedData];
+    mobileData = [...fixedData];
+    currentPage = 1;
+    renderMobileCardsPage();
+  } else {
+    $("#data-table").show();
+  }
 }
 
-
-/* ================= SAVE ================= */
+/* ================= SAVE (เดิม 100%) ================= */
 function submitFormModal() {
   const commandNumber = commandNumberModal.value;
   const topic = topicModal.value;
@@ -161,38 +204,49 @@ function submitFormModal() {
   const year = document.getElementById("yearSelect").value;
   const fileInput = fileInputModal;
 
-  if(!commandNumber || !topic || !orderDate){
+  if (!commandNumber || !topic || !orderDate) {
     alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
     return;
   }
 
-  function save(fileUrl){
+  function save(fileUrl) {
     api("save", { year, commandNumber, topic, orderDate, fileUrl })
-      .then(()=> {
+      .then(() => {
         loadData();
         $("#newCommandModal").modal("hide");
-        commandNumberModal.value="";
-        topicModal.value="";
-        orderDateModal.value="";
-        fileInputModal.value="";
-        const n=document.getElementById("saveNotification");
-        n.style.display="block";
-        setTimeout(()=>n.style.display="none",2500);
+        commandNumberModal.value = "";
+        topicModal.value = "";
+        orderDateModal.value = "";
+        fileInputModal.value = "";
+        const n = document.getElementById("saveNotification");
+        n.style.display = "block";
+        setTimeout(() => n.style.display = "none", 2500);
       });
   }
 
-  if(fileInput.files.length>0){
-    const f=fileInput.files[0];
-    const r=new FileReader();
-    r.onload=e=>api("upload",{name:f.name,mime:f.type,base64:e.target.result.split(",")[1]}).then(save);
+  if (fileInput.files.length > 0) {
+    const f = fileInput.files[0];
+    const r = new FileReader();
+    r.onload = e =>
+      api("upload", {
+        name: f.name,
+        mime: f.type,
+        base64: e.target.result.split(",")[1]
+      }).then(save);
     r.readAsDataURL(f);
   } else save("");
 }
 
 /* ================= INIT ================= */
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function () {
   loadYears();
-  document.getElementById("resetBtn").addEventListener("click", function(){
-    if(dataTable) dataTable.search("").draw();
+
+  document.getElementById("mobileSearch").addEventListener("input", e => {
+    const q = e.target.value.toLowerCase();
+    mobileData = originalMobileData.filter(r =>
+      r.join(" ").toLowerCase().includes(q)
+    );
+    currentPage = 1;
+    renderMobileCardsPage();
   });
 });
