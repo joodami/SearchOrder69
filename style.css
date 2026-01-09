@@ -1,6 +1,13 @@
-* { font-family: 'K2D', sans-serif; }
-body { background-color: #f8f9fa; }
+/* ===== Font & Body ===== */
+* {
+  font-family: 'K2D', sans-serif;
+}
 
+body {
+  background-color: #f8f9fa;
+}
+
+/* ===== Header ===== */
 .header-box {
   background: #fff;
   border-radius: 15px;
@@ -13,12 +20,14 @@ body { background-color: #f8f9fa; }
   margin-bottom: 10px;
 }
 
+/* ===== DataTable ===== */
 table.dataTable thead th {
   background: #8B0000;
   color: #fff;
   text-align: center;
 }
 
+/* ===== Save Notification ===== */
 #saveNotification {
   position: fixed;
   top: 20px;
@@ -32,9 +41,18 @@ table.dataTable thead th {
   z-index: 1050;
 }
 
-/* 📱 ปรับเฉพาะมือถือ */
+/* ================================================= */
+/* 📱 MOBILE (≤768px)                                */
+/* ================================================= */
 @media (max-width: 768px) {
 
+  /* ===== ซ่อน DataTables ทั้งระบบบนมือถือ ===== */
+  /* แก้ปัญหา search / paginate ซ้อน */
+  .dataTables_wrapper {
+    display: none !important;
+  }
+
+  /* ===== Header ===== */
   h5#titleYear {
     font-size: 1rem;
   }
@@ -43,46 +61,23 @@ table.dataTable thead th {
     max-width: 90px;
   }
 
+  /* ===== Table (เผื่อ fallback) ===== */
   table.dataTable {
     font-size: 0.85rem;
-  }
-
-  .btn {
-    font-size: 0.85rem;
-    padding: 6px 10px;
-  }
-}
-
-
-/* 📱 ปรับเฉพาะมือถือ */
-@media (max-width: 768px) {
-
-  /* ปรับหัวข้อและโลโก้ */
-  h5#titleYear {
-    font-size: 1rem;
-  }
-
-  .school-logo {
-    max-width: 90px;
-  }
-
-  /* ตารางตัวอักษรเล็กลง */
-  table.dataTable {
-    font-size: 0.85rem;
-    display: block;       /* ให้ scroll ภายใน tbody */
-    overflow-x: hidden;   /* ปิด scroll แนวนอน */
+    display: block;
+    overflow-x: hidden;
     width: 100% !important;
   }
 
-  /* ปรับปุ่ม */
+  /* ===== Button ===== */
   .btn {
     font-size: 0.85rem;
     padding: 6px 10px;
   }
 
-  /* Card view ของมือถือ */
+  /* ===== Mobile Card ===== */
   table.dataTable > tbody > tr.child {
-    background: transparent; /* ไม่ให้แถบสี */
+    background: transparent;
   }
 
   .mobile-card {
@@ -91,7 +86,7 @@ table.dataTable thead th {
     padding: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,.08);
     margin: 8px 0;
-    width: 100%;          /* กว้างเต็มหน้าจอ */
+    width: 100%;
     box-sizing: border-box;
   }
 
@@ -99,7 +94,7 @@ table.dataTable thead th {
     display: flex;
     margin-bottom: 6px;
     font-size: 0.9rem;
-    flex-wrap: wrap;      /* ให้ label/value ลงบรรทัดใหม่ถ้ายาวเกิน */
+    flex-wrap: wrap;
   }
 
   .card-label {
@@ -114,6 +109,9 @@ table.dataTable thead th {
   }
 }
 
+/* ================================================= */
+/* Mobile Card (Global – เผื่อใช้นอก media query)   */
+/* ================================================= */
 .mobile-card {
   background: #ffffff;
   border-radius: 12px;
@@ -121,4 +119,3 @@ table.dataTable thead th {
   box-shadow: 0 2px 8px rgba(0,0,0,.08);
   margin-bottom: 12px;
 }
-
