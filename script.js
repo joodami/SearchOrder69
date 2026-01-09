@@ -56,6 +56,7 @@ function loadData() {
 
   api("getData", { year }).then(showData);
 }
+
 /* ================= FILE BUTTONS ================= */
 function renderFileButtons(data) {
   if (!data) return "";
@@ -130,9 +131,16 @@ function renderMobilePagination() {
   `;
 }
 
+// 🔴 แก้ไข: แสดง spinner เมื่อมือถือเปลี่ยนหน้า
 function changeMobilePage(p) {
-  currentPage = p;
-  renderMobileCardsPage();
+  const spinner = document.getElementById("loadingSpinner");
+  spinner.style.display = "block"; // แสดง spinner
+
+  setTimeout(() => { // ใช้ setTimeout 0ms เพื่อให้ spinner แสดงก่อน render
+    currentPage = p;
+    renderMobileCardsPage();
+    spinner.style.display = "none"; // ซ่อน spinner หลัง render
+  }, 0);
 }
 
 /* ================= TABLE + CARD SWITCH ================= */
