@@ -118,11 +118,11 @@ function renderMobilePagination() {
 
   pag.innerHTML = `
     <button class="btn btn-sm btn-outline-secondary mr-2"
-      ${currentPage === 1 ? "disabled" : ""}
+      ${currentPage === 1 ? "disabled" : ""} 
       onclick="changeMobilePage(${currentPage - 1})">◀</button>
     หน้า ${currentPage} / ${totalPages}
     <button class="btn btn-sm btn-outline-secondary ml-2"
-      ${currentPage === totalPages ? "disabled" : ""}
+      ${currentPage === totalPages ? "disabled" : ""} 
       onclick="changeMobilePage(${currentPage + 1})">▶</button>
   `;
 }
@@ -187,6 +187,26 @@ function showData(dataArray) {
     });
 
     $("#data-table").show();
+
+    /* ===== เพิ่มฟังก์ชัน Reset Button สำหรับ Desktop ===== */
+    const resetBtnDesktop = document.getElementById("resetBtn");
+    const searchInput = $('#data-table_filter input'); // DataTable search box
+
+    searchInput.off('input').on('input', function () {
+      if ($(this).val()) {
+        resetBtnDesktop.classList.remove("d-none");
+      } else {
+        resetBtnDesktop.classList.add("d-none");
+      }
+    });
+
+    resetBtnDesktop.addEventListener("click", function () {
+      if (dataTable) {
+        dataTable.search('').draw();
+      }
+      this.classList.add("d-none");
+    });
+
     return;
   }
 
@@ -251,7 +271,11 @@ function submitFormModal() {
 document.addEventListener("DOMContentLoaded", function () {
   loadYears();
 
-  document.getElementById("mobileSearch").addEventListener("input", e => {
+  const resetBtn = document.getElementById("resetBtn");
+  const mobileSearch = document.getElementById("mobileSearch");
+
+  /* ===== Mobile Search ===== */
+  mobileSearch.addEventListener("input", e => {
     const q = e.target.value.toLowerCase();
 
     if (!q) {
@@ -269,10 +293,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   resetBtn.addEventListener("click", () => {
-    mobileSearch.value = "";
-    mobileData = [...originalMobileData];
-    currentPage = 1;
-    renderMobileCardsPage();
-    resetBtn.classList.add("d-none");
+    if (window.innerWidth <= 768) {
+      mobileSearch.value = "";
+      mobileData = [...originalMobileData];
+      currentPage = 1;
+      renderMobileCardsPage();
+      resetBtn.classList.add("d-none");
+    }
   });
 });
