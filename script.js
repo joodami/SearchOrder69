@@ -53,7 +53,7 @@ function loadData() {
   api("getData", { year }).then(showData);
 }
 
-/* ================= FILE BUTTONS (ใช้ร่วมกัน) ================= */
+/* ================= FILE BUTTONS ================= */
 function renderFileButtons(data) {
   if (!data) return "";
 
@@ -86,22 +86,10 @@ function renderMobileCardsPage() {
   pageData.forEach(r => {
     container.innerHTML += `
       <div class="mobile-card">
-        <div class="card-row">
-          <div class="card-label">คำสั่งที่</div>
-          <div class="card-value">${r[0]}</div>
-        </div>
-        <div class="card-row">
-          <div class="card-label">เรื่อง</div>
-          <div class="card-value">${r[1]}</div>
-        </div>
-        <div class="card-row">
-          <div class="card-label">สั่ง ณ วันที่</div>
-          <div class="card-value">${r[2]}</div>
-        </div>
-        <div class="card-row">
-          <div class="card-label">ไฟล์</div>
-          <div class="card-value">${renderFileButtons(r[3])}</div>
-        </div>
+        <div class="card-row"><div class="card-label">คำสั่งที่</div><div class="card-value">${r[0]}</div></div>
+        <div class="card-row"><div class="card-label">เรื่อง</div><div class="card-value">${r[1]}</div></div>
+        <div class="card-row"><div class="card-label">สั่ง ณ วันที่</div><div class="card-value">${r[2]}</div></div>
+        <div class="card-row"><div class="card-label">ไฟล์</div><div class="card-value">${renderFileButtons(r[3])}</div></div>
       </div>
     `;
   });
@@ -135,68 +123,56 @@ function changeMobilePage(p) {
 /* ================= TABLE ================= */
 function showData(dataArray) {
 
-  /* ===== Desktop Table (เดิม 100%) ===== */
+  const fixedData = dataArray.map(r => [r[0], r[1], r[2], r[3]]);
+
+  /* ===== Desktop ===== */
+  if (window.innerWidth > 768) {
+
+    if ($.fn.DataTable.isDataTable("#data-table")) {
+      $("#data-table").DataTable().clear().destroy();
+    }
+
+    dataTable = $("#data-table").DataTable({
+      data: fixedData,
+      pageLength: 10,
+      pagingType: "simple",
+      order: [[0, "desc"]],
+      columns: [
+        { title: "คำสั่งที่" },
+        { title: "เรื่อง" },
+        { title: "สั่ง ณ วันที่" },
+        { title: "ไฟล์" }
+      ],
+      columnDefs: [{
+        targets: 3,
+        orderable: false,
+        render: (d, t) => t === "display" ? renderFileButtons(d) : d
+      }],
+      language: {
+        search: "ค้นหาคำสั่ง:",
+        paginate: { previous: "ก่อนหน้า", next: "ถัดไป" }
+      }
+    });
+
+    $("#data-table").show();
+    return;
+  }
+
+  /* ===== Mobile ===== */
   if ($.fn.DataTable.isDataTable("#data-table")) {
     $("#data-table").DataTable().clear().destroy();
   }
+  $("#data-table").hide();
 
-  const fixedData = dataArray.map(r => [r[0], r[1], r[2], r[3]]);
-
-  dataTable = $("#data-table").DataTable({
-    data: fixedData,
-    deferRender: true,
-    pageLength: 10,
-    searchDelay: 600,
-    autoWidth: false,
-    pagingType: "simple",
-    order: [[0, "desc"]],
-
-    columns: [
-      { title: "คำสั่งที่" },
-      { title: "เรื่อง" },
-      { title: "สั่ง ณ วันที่" },
-      { title: "ไฟล์" }
-    ],
-
-    columnDefs: [
-      { targets: [0, 2, 3], className: "text-center" },
-      { targets: 1, className: "text-left" },
-      {
-        targets: 3,
-        orderable: false,
-        render: function (data, type) {
-          if (type === "display") return renderFileButtons(data);
-          return data;
-        }
-      }
-    ],
-
-    language: {
-      search: "ค้นหาคำสั่ง:",
-      lengthMenu: "แสดง _MENU_ รายการ",
-      info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-      zeroRecords: "ไม่พบข้อมูล",
-      emptyTable: "ไม่มีข้อมูล",
-      paginate: {
-        previous: "ก่อนหน้า",
-        next: "ถัดไป"
-      }
-    }
-  });
-
-  /* ===== Mobile Card ===== */
-  if (window.innerWidth <= 768) {
-    $("#data-table").hide();
-    originalMobileData = [...fixedData];
-    mobileData = [...fixedData];
-    currentPage = 1;
-    renderMobileCardsPage();
-  } else {
-    $("#data-table").show();
-  }
+  originalMobileData = fixedData.sort(
+    (a, b) => Number(b[0]) - Number(a[0])
+  );
+  mobileData = [...originalMobileData];
+  currentPage = 1;
+  renderMobileCardsPage();
 }
 
-/* ================= SAVE (เดิม 100%) ================= */
+/* ================= SAVE ================= */
 function submitFormModal() {
   const commandNumber = commandNumberModal.value;
   const topic = topicModal.value;
@@ -243,10 +219,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("mobileSearch").addEventListener("input", e => {
     const q = e.target.value.toLowerCase();
-    mobileData = originalMobileData.filter(r =>
-      r.join(" ").toLowerCase().includes(q)
-    );
+    if (!q) {
+      mobileData = [...originalMobileData];
+      resetBtn.classList.add("d-none");
+    } else {
+      mobileData = originalMobileData.filter(r =>
+        r.join(" ").toLowerCase().includes(q)
+      );
+      resetBtn.classList.remove("d-none");
+    }
     currentPage = 1;
     renderMobileCardsPage();
+  });
+
+  resetBtn.addEventListener("click", () => {
+    mobileSearch.value = "";
+    mobileData = [...originalMobileData];
+    currentPage = 1;
+    renderMobileCardsPage();
+    resetBtn.classList.add("d-none");
   });
 });
