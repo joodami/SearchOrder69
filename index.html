@@ -9,13 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="style.css">
 
-  <!-- ✅ เพิ่ม Responsive CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
-
-  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -45,6 +42,16 @@
 
   <div class="card shadow-sm">
     <div class="card-body">
+
+      <!-- Mobile Search -->
+<div class="d-md-none mb-3">
+  <input id="mobileSearch" class="form-control" placeholder="ค้นหาคำสั่ง..." />
+</div>
+
+<!-- Mobile Card -->
+<div id="mobileCardContainer" class="d-md-none"></div>
+<div id="mobilePagination" class="d-md-none text-center mt-3"></div>
+
 
       <!-- ✅ ครอบ table -->
       <div class="table-responsive">
@@ -101,12 +108,8 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
-
-<!-- ✅ เพิ่ม Responsive JS -->
-<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
