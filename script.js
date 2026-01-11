@@ -25,6 +25,26 @@ function api(action, payload = {}) {
   }).then(res => res.json());
 }
 
+/* ================= NEW : PREPARE LOADING UI ================= */
+/* ⭐ เพิ่มใหม่ : ซ่อน table / card แล้วแสดง spinner ทันที */
+function prepareLoadingUI() {
+  const spinner = document.getElementById("loadingSpinner");
+  spinner.style.display = "block";
+
+  if (window.innerWidth > 768) {
+    // ===== Desktop =====
+    $("#data-table").hide();
+
+    if ($.fn.DataTable.isDataTable("#data-table")) {
+      $("#data-table").DataTable().clear().destroy();
+    }
+  } else {
+    // ===== Mobile =====
+    document.getElementById("mobileCardContainer").innerHTML = "";
+    document.getElementById("mobilePagination").innerHTML = "";
+  }
+}
+
 /* ================= LOAD YEARS ================= */
 function loadYears() {
   api("getYears").then(years => {
@@ -51,8 +71,8 @@ function loadData() {
 
   updateCurrentYearBadge(year);
 
-  // 🔴 แสดง spinner
-  document.getElementById("loadingSpinner").style.display = "block";
+  // ⭐ แสดง spinner + ซ่อน UI เดิม (Desktop & Mobile)
+  prepareLoadingUI();
 
   api("getData", { year }).then(showData);
 }
@@ -131,30 +151,25 @@ function renderMobilePagination() {
   `;
 }
 
-// 🔴 แก้ไข: แสดง spinner เมื่อมือถือเปลี่ยนหน้า
 function changeMobilePage(p) {
   const spinner = document.getElementById("loadingSpinner");
-  spinner.style.display = "block"; // แสดง spinner
+  spinner.style.display = "block";
 
-  setTimeout(() => { // ใช้ setTimeout 0ms เพื่อให้ spinner แสดงก่อน render
+  setTimeout(() => {
     currentPage = p;
     renderMobileCardsPage();
-    spinner.style.display = "none"; // ซ่อน spinner หลัง render
+    spinner.style.display = "none";
   }, 0);
 }
 
 /* ================= TABLE + CARD SWITCH ================= */
 function showData(dataArray) {
-  const spinner = document.getElementById("loadingSpinner"); // 🔴 เรียก spinner
+  const spinner = document.getElementById("loadingSpinner");
 
   const fixedData = dataArray.map(r => [r[0], r[1], r[2], r[3]]);
 
-  /* ===== DESKTOP (คืนค่า config เดิมทั้งหมด) ===== */
+  /* ===== DESKTOP ===== */
   if (window.innerWidth > 768) {
-
-    if ($.fn.DataTable.isDataTable("#data-table")) {
-      $("#data-table").DataTable().clear().destroy();
-    }
 
     dataTable = $("#data-table").DataTable({
       data: fixedData,
@@ -199,37 +214,11 @@ function showData(dataArray) {
     });
 
     $("#data-table").show();
-
-    /* ===== เพิ่มฟังก์ชัน Reset Button สำหรับ Desktop ===== */
-    const resetBtnDesktop = document.getElementById("resetBtn");
-    const searchInput = $('#data-table_filter input'); // DataTable search box
-
-    searchInput.off('input').on('input', function () {
-      if ($(this).val()) {
-        resetBtnDesktop.classList.remove("d-none");
-      } else {
-        resetBtnDesktop.classList.add("d-none");
-      }
-    });
-
-    resetBtnDesktop.addEventListener("click", function () {
-      if (dataTable) {
-        dataTable.search('').draw();
-      }
-      this.classList.add("d-none");
-    });
-
-    // 🔴 ซ่อน spinner หลังโหลด Desktop เสร็จ
     spinner.style.display = "none";
-
     return;
   }
 
   /* ===== MOBILE ===== */
-  if ($.fn.DataTable.isDataTable("#data-table")) {
-    $("#data-table").DataTable().clear().destroy();
-  }
-
   $("#data-table").hide();
 
   originalMobileData = fixedData.sort(
@@ -240,10 +229,8 @@ function showData(dataArray) {
   currentPage = 1;
   renderMobileCardsPage();
 
-  // 🔴 ซ่อน spinner หลังโหลด Mobile เสร็จ
   spinner.style.display = "none";
 }
-
 
 /* ================= SAVE ================= */
 function submitFormModal() {
@@ -293,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const resetBtn = document.getElementById("resetBtn");
   const mobileSearch = document.getElementById("mobileSearch");
 
-  /* ===== Mobile Search ===== */
   mobileSearch.addEventListener("input", e => {
     const q = e.target.value.toLowerCase();
 
