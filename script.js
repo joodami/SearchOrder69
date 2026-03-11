@@ -181,10 +181,10 @@ function showData(dataArray) {
       order: [[0, "desc"]],
 
       columns: [
-        { title: "คำสั่งที่" },
-        { title: "เรื่อง" },
-        { title: "สั่ง ณ วันที่" },
-        { title: "ไฟล์" }
+        { title: "คำสั่งที่", width: "10%" },
+        { title: "เรื่อง", width: "55%" },
+        { title: "สั่ง ณ วันที่", width: "20%" },
+        { title: "ไฟล์", width: "15%" }
       ],
 
       columnDefs: [
