@@ -260,6 +260,20 @@ function showData(dataArray) {
 
     });
 
+    // ⭐ ตรวจจับการค้นหา Desktop
+dataTable.on('search.dt', function () {
+
+  const searchValue = dataTable.search();
+  const resetBtn = document.getElementById("resetBtn");
+
+  if (searchValue) {
+    resetBtn.classList.remove("d-none");
+  } else {
+    resetBtn.classList.add("d-none");
+  }
+
+});
+
     $("#data-table").show();
     spinner.style.display = "none";
 
@@ -348,13 +362,21 @@ document.addEventListener("DOMContentLoaded", function () {
     renderMobileCardsPage();
   });
 
-  resetBtn.addEventListener("click", () => {
-    if (window.innerWidth <= 768) {
-      mobileSearch.value = "";
-      mobileData = [...originalMobileData];
-      currentPage = 1;
-      renderMobileCardsPage();
-      resetBtn.classList.add("d-none");
-    }
-  });
+resetBtn.addEventListener("click", () => {
+
+  if (window.innerWidth <= 768) {
+
+    mobileSearch.value = "";
+    mobileData = [...originalMobileData];
+    currentPage = 1;
+    renderMobileCardsPage();
+
+  } else {
+
+    dataTable.search("").draw(); // รีเซ็ตค้นหา desktop
+
+  }
+
+  resetBtn.classList.add("d-none");
+
 });
