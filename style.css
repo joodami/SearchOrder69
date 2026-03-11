@@ -120,7 +120,6 @@ table.dataTable thead th {
   margin-bottom: 12px;
 }
 
-/* หัวคอลัมน์ "เรื่อง" อยู่กลาง */
 #data-table thead th:nth-child(2){
-  text-align: center;
+  text-align: center !important;
 }
