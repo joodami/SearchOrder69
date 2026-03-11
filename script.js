@@ -47,18 +47,26 @@ function prepareLoadingUI() {
 
 /* ================= LOAD YEARS ================= */
 function loadYears() {
+
+  prepareLoadingUI(); // ⭐ แสดง spinner ทันที
+
   api("getYears").then(years => {
+
     const sel = document.getElementById("yearSelect");
     sel.innerHTML = "";
+
     years.sort((a, b) => b - a);
+
     years.forEach(y => {
       const opt = document.createElement("option");
       opt.value = y;
       opt.text = y;
       sel.appendChild(opt);
     });
+
     const current = getCurrentThaiYear();
     sel.value = years.includes(current) ? current : years[0];
+
     loadData();
   });
 }
