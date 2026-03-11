@@ -21,9 +21,10 @@ body {
 }
 
 /* ===== DataTable ===== */
-table.dataTable thead th {
-  background: #8B0000;
-  color: #fff;
+table.dataTable thead th,
+.dataTables_scrollHead thead th {
+  background: #8B0000 !important;
+  color: #ffffff !important;
   text-align: center;
 }
 
