@@ -178,66 +178,88 @@ function changeMobilePage(p) {
 
 /* ================= TABLE + CARD SWITCH ================= */
 function showData(dataArray) {
+
   const spinner = document.getElementById("loadingSpinner");
 
-  const fixedData = dataArray.map(r => [r[0], r[1], r[2], r[3]]);
+  const fixedData = dataArray.map(r => [
+    r[0],
+    r[1],
+    r[2],
+    r[3]
+  ]);
 
   /* ===== DESKTOP ===== */
   if (window.innerWidth > 768) {
 
-dataTable = $("#data-table").DataTable({
-  data: fixedData,
+    // ⭐ ป้องกัน DataTable ซ้อน
+    if ($.fn.DataTable.isDataTable("#data-table")) {
+      $("#data-table").DataTable().clear().destroy();
+    }
 
-  deferRender: true,       // ⭐ render เฉพาะที่มองเห็น
-  processing: true,
-  pageLength: 10,
-  searchDelay: 500,
+    dataTable = $("#data-table").DataTable({
 
-  autoWidth: false,
-  pagingType: "simple",
-  order: [[0, "desc"]],
+      data: fixedData,
 
-  stateSave: true,         // ⭐ จำสถานะตาราง
-  scrollY: "55vh",         // ⭐ render เฉพาะ viewport
-  scroller: true,
+      deferRender: true,
+      processing: true,
 
-  columns: [
-    { title: "คำสั่งที่", width: "10%" },
-    { title: "เรื่อง", width: "55%" },
-    { title: "สั่ง ณ วันที่", width: "20%" },
-    { title: "ไฟล์", width: "15%" }
-  ],
+      pageLength: 10,
+      searchDelay: 500,
 
-  columnDefs: [
-    { targets: [0,2,3], className: "text-center" },
-    { targets: 1, className: "text-left" },
-    {
-      targets: 3,
-      orderable: false,
-      render: function(data,type){
-        if(type==="display") return renderFileButtons(data);
-        return data;
+      autoWidth: false,
+      pagingType: "simple",
+
+      order: [[0, "desc"]],
+
+      stateSave: true,
+
+      columns: [
+        { title: "คำสั่งที่", width: "10%" },
+        { title: "เรื่อง", width: "55%" },
+        { title: "สั่ง ณ วันที่", width: "20%" },
+        { title: "ไฟล์", width: "15%" }
+      ],
+
+      columnDefs: [
+
+        { targets: [0,2,3], className: "text-center" },
+
+        { targets: 1, className: "text-left" },
+
+        {
+          targets: 3,
+          orderable: false,
+          render: function(data,type){
+            if(type==="display"){
+              return renderFileButtons(data);
+            }
+            return data;
+          }
+        }
+
+      ],
+
+      language:{
+        processing:"กำลังโหลดข้อมูล...",
+        search:"ค้นหา:",
+        zeroRecords:"ไม่พบข้อมูล",
+        emptyTable:"ไม่มีข้อมูล",
+        paginate:{
+          previous:"ก่อนหน้า",
+          next:"ถัดไป"
+        }
       }
-    }
-  ],
 
-  language:{
-    processing:"กำลังโหลดข้อมูล...",
-    search:"ค้นหา:",
-    zeroRecords:"ไม่พบข้อมูล",
-    emptyTable:"ไม่มีข้อมูล",
-    paginate:{
-      previous:"ก่อนหน้า",
-      next:"ถัดไป"
-    }
-  }
-});
+    });
+
     $("#data-table").show();
     spinner.style.display = "none";
+
     return;
   }
 
   /* ===== MOBILE ===== */
+
   $("#data-table").hide();
 
   originalMobileData = fixedData.sort(
@@ -245,7 +267,9 @@ dataTable = $("#data-table").DataTable({
   );
 
   mobileData = [...originalMobileData];
+
   currentPage = 1;
+
   renderMobileCardsPage();
 
   spinner.style.display = "none";
