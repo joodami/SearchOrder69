@@ -171,50 +171,53 @@ function showData(dataArray) {
   /* ===== DESKTOP ===== */
   if (window.innerWidth > 768) {
 
-    dataTable = $("#data-table").DataTable({
-      data: fixedData,
-      deferRender: true,
-      pageLength: 10,
-      searchDelay: 600,
-      autoWidth: false,
-      pagingType: "simple",
-      order: [[0, "desc"]],
+   dataTable = $("#data-table").DataTable({
+  data: fixedData,
 
-      columns: [
-        { title: "คำสั่งที่", width: "10%" },
-        { title: "เรื่อง", width: "55%" },
-        { title: "สั่ง ณ วันที่", width: "20%" },
-        { title: "ไฟล์", width: "15%" }
-      ],
+  deferRender: true,      // ⭐ เร็วขึ้นมาก
+  processing: true,       // ⭐ แสดงสถานะกำลังโหลด
+  pageLength: 10,
+  searchDelay: 600,
 
-columnDefs: [
-  { targets: [0, 2, 3], className: "text-center" },
+  autoWidth: false,
+  pagingType: "simple",
 
-  // คอลัมน์เรื่อง (เฉพาะข้อมูล)
-  { targets: 1, className: "text-left" },
+  order: [[0, "desc"]],
 
-  {
-    targets: 3,
-    orderable: false,
-    render: function (data, type) {
-      if (type === "display") return renderFileButtons(data);
-      return data;
+  columns: [
+    { title: "คำสั่งที่", width: "10%" },
+    { title: "เรื่อง", width: "55%" },
+    { title: "สั่ง ณ วันที่", width: "20%" },
+    { title: "ไฟล์", width: "15%" }
+  ],
+
+  columnDefs: [
+    { targets: [0,2,3], className: "text-center" },
+    { targets: 1, className: "text-left" },
+
+    {
+      targets: 3,
+      orderable: false,
+      render: function(data, type){
+        if(type === "display") return renderFileButtons(data);
+        return data;
+      }
+    }
+  ],
+
+  language: {
+    processing: "กำลังโหลดข้อมูล...",
+    search: "ค้นหาคำสั่ง:",
+    lengthMenu: "แสดง _MENU_ รายการ",
+    info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+    zeroRecords: "ไม่พบข้อมูล",
+    emptyTable: "ไม่มีข้อมูล",
+    paginate: {
+      previous: "ก่อนหน้า",
+      next: "ถัดไป"
     }
   }
-],
-
-      language: {
-        search: "ค้นหาคำสั่ง:",
-        lengthMenu: "แสดง _MENU_ รายการ",
-        info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-        zeroRecords: "ไม่พบข้อมูล",
-        emptyTable: "ไม่มีข้อมูล",
-        paginate: {
-          previous: "ก่อนหน้า",
-          next: "ถัดไป"
-        }
-      }
-    });
+});
 
     $("#data-table").show();
     spinner.style.display = "none";
