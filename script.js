@@ -101,35 +101,46 @@ function renderFileButtons(data) {
 
 /* ================= MOBILE CARD ================= */
 function renderMobileCardsPage() {
+
   const container = document.getElementById("mobileCardContainer");
 
   const start = (currentPage - 1) * pageSize;
-  const pageData = mobileData.slice(start, start + pageSize);
+  const end = start + pageSize;
+
+  const pageData = mobileData.slice(start, end);
 
   let html = "";
 
-  pageData.forEach(r => {
+  for(let i=0;i<pageData.length;i++){
+
+    const r = pageData[i];
+
     html += `
       <div class="mobile-card">
+
         <div class="card-row">
           <div class="card-label">คำสั่งที่</div>
           <div class="card-value">${r[0]}</div>
         </div>
+
         <div class="card-row">
           <div class="card-label">เรื่อง</div>
           <div class="card-value">${r[1]}</div>
         </div>
+
         <div class="card-row">
           <div class="card-label">สั่ง ณ วันที่</div>
           <div class="card-value">${r[2]}</div>
         </div>
+
         <div class="card-row">
           <div class="card-label">ไฟล์</div>
           <div class="card-value">${renderFileButtons(r[3])}</div>
         </div>
+
       </div>
     `;
-  });
+  }
 
   container.innerHTML = html;
 
