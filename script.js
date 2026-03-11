@@ -187,18 +187,21 @@ function showData(dataArray) {
         { title: "ไฟล์", width: "15%" }
       ],
 
-      columnDefs: [
-        { targets: [0, 2, 3], className: "text-center" },
-        { targets: 1, className: "text-left" },
-        {
-          targets: 3,
-          orderable: false,
-          render: function (data, type) {
-            if (type === "display") return renderFileButtons(data);
-            return data;
-          }
-        }
-      ],
+columnDefs: [
+  { targets: [0, 2, 3], className: "text-center" },
+
+  // คอลัมน์เรื่อง (เฉพาะข้อมูล)
+  { targets: 1, className: "text-left" },
+
+  {
+    targets: 3,
+    orderable: false,
+    render: function (data, type) {
+      if (type === "display") return renderFileButtons(data);
+      return data;
+    }
+  }
+],
 
       language: {
         search: "ค้นหาคำสั่ง:",
