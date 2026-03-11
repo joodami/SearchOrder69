@@ -261,7 +261,7 @@ function showData(dataArray) {
     });
 
     // ⭐ ตรวจจับการค้นหา Desktop
-dataTable.on('search.dt', function () {
+dataTable.off('search.dt').on('search.dt', function () {
 
   const searchValue = dataTable.search();
   const resetBtn = document.getElementById("resetBtn");
@@ -379,4 +379,6 @@ resetBtn.addEventListener("click", () => {
 
   resetBtn.classList.add("d-none");
 
+});
+  
 });
