@@ -102,13 +102,14 @@ function renderFileButtons(data) {
 /* ================= MOBILE CARD ================= */
 function renderMobileCardsPage() {
   const container = document.getElementById("mobileCardContainer");
-  container.innerHTML = "";
 
   const start = (currentPage - 1) * pageSize;
   const pageData = mobileData.slice(start, start + pageSize);
 
+  let html = "";
+
   pageData.forEach(r => {
-    container.innerHTML += `
+    html += `
       <div class="mobile-card">
         <div class="card-row">
           <div class="card-label">คำสั่งที่</div>
@@ -129,6 +130,8 @@ function renderMobileCardsPage() {
       </div>
     `;
   });
+
+  container.innerHTML = html;
 
   renderMobilePagination();
 }
