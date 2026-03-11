@@ -174,18 +174,21 @@ function showData(dataArray) {
   /* ===== DESKTOP ===== */
   if (window.innerWidth > 768) {
 
-   dataTable = $("#data-table").DataTable({
+dataTable = $("#data-table").DataTable({
   data: fixedData,
 
-  deferRender: true,      // ⭐ เร็วขึ้นมาก
-  processing: true,       // ⭐ แสดงสถานะกำลังโหลด
+  deferRender: true,       // ⭐ render เฉพาะที่มองเห็น
+  processing: true,
   pageLength: 10,
-  searchDelay: 600,
+  searchDelay: 500,
 
   autoWidth: false,
   pagingType: "simple",
-
   order: [[0, "desc"]],
+
+  stateSave: true,         // ⭐ จำสถานะตาราง
+  scrollY: "55vh",         // ⭐ render เฉพาะ viewport
+  scroller: true,
 
   columns: [
     { title: "คำสั่งที่", width: "10%" },
@@ -197,31 +200,27 @@ function showData(dataArray) {
   columnDefs: [
     { targets: [0,2,3], className: "text-center" },
     { targets: 1, className: "text-left" },
-
     {
       targets: 3,
       orderable: false,
-      render: function(data, type){
-        if(type === "display") return renderFileButtons(data);
+      render: function(data,type){
+        if(type==="display") return renderFileButtons(data);
         return data;
       }
     }
   ],
 
-  language: {
-    processing: "กำลังโหลดข้อมูล...",
-    search: "ค้นหาคำสั่ง:",
-    lengthMenu: "แสดง _MENU_ รายการ",
-    info: "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
-    zeroRecords: "ไม่พบข้อมูล",
-    emptyTable: "ไม่มีข้อมูล",
-    paginate: {
-      previous: "ก่อนหน้า",
-      next: "ถัดไป"
+  language:{
+    processing:"กำลังโหลดข้อมูล...",
+    search:"ค้นหา:",
+    zeroRecords:"ไม่พบข้อมูล",
+    emptyTable:"ไม่มีข้อมูล",
+    paginate:{
+      previous:"ก่อนหน้า",
+      next:"ถัดไป"
     }
   }
 });
-
     $("#data-table").show();
     spinner.style.display = "none";
     return;
