@@ -24,36 +24,37 @@
       line-height: 1.6;
     }
     
-    /* Header Section - ปรับให้ดูเป็นทางการขึ้น */
+    /* --- ปรับปรุง Header ให้กะทัดรัด ไม่กินพื้นที่เยอะ --- */
     .header-section { 
       background: linear-gradient(135deg, #8B0000 0%, #5a0000 100%);
       color: white; 
-      padding: 50px 0 80px 0; 
+      padding: 25px 0 65px 0; /* ลดระยะห่างบนล่างลง */
       border-bottom: 5px solid var(--accent-color);
     }
     .school-logo { 
-      max-width: 90px; 
-      margin-bottom: 20px;
+      max-width: 75px; /* ลดขนาดโลโก้ลงเล็กน้อย */
+      margin-bottom: 15px;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
     .header-section h2 { 
       font-weight: 700; 
+      font-size: 1.6rem; /* ปรับขนาดหัวข้อให้พอดี */
       letter-spacing: 1px;
       margin-bottom: 5px;
     }
     .header-section p { 
       font-weight: 300; 
       opacity: 0.9;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     
-    /* Search Box - เรียบแต่เด่น */
-    .search-box { margin-top: -50px; z-index: 100; position: relative; }
+    /* Search Box */
+    .search-box { margin-top: -45px; z-index: 100; position: relative; }
     .card-search { 
       border: none; 
       border-radius: 12px; 
       box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-      padding: 30px; 
+      padding: 25px; 
       background: white;
     }
     .form-select, .form-control {
@@ -66,8 +67,8 @@
       box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.1);
     }
     
-    /* Content Cards & Table */
-    .content-container { margin-top: 40px; margin-bottom: 60px; }
+    /* Table & Content */
+    .content-container { margin-top: 35px; margin-bottom: 60px; }
     .table-container {
       background: white;
       border-radius: 12px;
@@ -81,20 +82,18 @@
     .table th { font-weight: 600; color: #555; text-transform: uppercase; font-size: 0.85rem; padding: 15px; }
     .table td { vertical-align: middle; padding: 15px; border-bottom: 1px solid #f1f1f1; }
 
-    /* Mobile View */
+    /* Mobile UI */
     .mobile-card { 
       background: white; 
       border-radius: 12px; 
-      padding: 20px; 
+      padding: 18px; 
       margin-bottom: 15px; 
       border-left: 5px solid var(--primary-color);
       box-shadow: 0 4px 6px rgba(0,0,0,0.03);
     }
     
-    /* UI Elements */
     .btn-primary { background-color: var(--primary-color); border: none; font-weight: 600; padding: 10px 25px; border-radius: 8px; }
     .btn-primary:hover { background-color: #6d0000; transform: translateY(-1px); }
-    
     .btn-success { background-color: #28a745; border: none; font-weight: 600; padding: 10px 20px; border-radius: 8px; }
     
     .badge-id { 
@@ -106,29 +105,29 @@
       font-size: 0.9rem;
     }
     
+    /* --- ปรับแต่ง Pagination ใหม่: สีเทาอ่อน เห็นเลขชัดเจน --- */
+    .pagination .page-link { 
+      color: #555 !important; 
+      border: 1px solid #dee2e6; 
+      margin: 0 3px; 
+      border-radius: 6px !important; 
+    }
+    .pagination .active .page-link { 
+      background-color: #e9ecef !important; /* สีเทาอ่อน */
+      color: #000 !important;             /* เลขหน้าปัจจุบันเป็นสีดำ */
+      border: 1px solid #dee2e6 !important; 
+      font-weight: bold;
+    }
+
     .desktop-only { display: block; }
     .mobile-only { display: none; }
     
     @media (max-width: 768px) {
       .desktop-only { display: none; }
       .mobile-only { display: block; }
-      .header-section { padding: 40px 0 70px 0; }
-      .header-section h2 { font-size: 1.25rem; }
+      .header-section { padding: 25px 0 55px 0; } /* กระชับขึ้นในมือถือ */
+      .header-section h2 { font-size: 1.2rem; }
     }
-
-    .pagination .page-link { color: var(--primary-color); border: none; margin: 0 3px; border-radius: 6px; }
-    /* เปลี่ยนจากสีแดง เป็นสีเทาอ่อน */
-.pagination .active .page-link { 
-  background-color: #e9ecef !important; /* สีเทาอ่อน */
-  color: #000 !important;             /* ตัวเลขหน้าเป็นสีดำ */
-  border: 1px solid #dee2e6 !important; 
-  font-weight: bold;
-}
-
-/* แถม: ปรับให้ตัวเลขหน้าที่ไม่ได้กด เป็นสีเทาเข้มแทนสีแดง */
-.pagination .page-link { 
-  color: #555 !important; 
-}
   </style>
 </head>
 <body>
