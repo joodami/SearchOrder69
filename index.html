@@ -117,7 +117,18 @@
     }
 
     .pagination .page-link { color: var(--primary-color); border: none; margin: 0 3px; border-radius: 6px; }
-    .pagination .active .page-link { background-color: var(--primary-color); }
+    /* เปลี่ยนจากสีแดง เป็นสีเทาอ่อน */
+.pagination .active .page-link { 
+  background-color: #e9ecef !important; /* สีเทาอ่อน */
+  color: #000 !important;             /* ตัวเลขหน้าเป็นสีดำ */
+  border: 1px solid #dee2e6 !important; 
+  font-weight: bold;
+}
+
+/* แถม: ปรับให้ตัวเลขหน้าที่ไม่ได้กด เป็นสีเทาเข้มแทนสีแดง */
+.pagination .page-link { 
+  color: #555 !important; 
+}
   </style>
 </head>
 <body>
