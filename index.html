@@ -122,7 +122,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // 🔴 แก้ไข URL ของคุณที่นี่
   const GAS_URL = "https://script.google.com/macros/s/AKfycbzvh9ILzGbqFyL-ZK8YYyIs-UZKlxEIcTwYSws8uiKkrMMmU3Db7SJnr61QyVHd-jxuSQ/exec";
   
   let fullData = [];
@@ -139,6 +138,24 @@
       loadData();
     });
   });
+
+  // ฟังก์ชันแปลงวันที่เป็นภาษาไทย
+  function formatThaiDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString; // ถ้าแปลงไม่ได้ให้คืนค่าเดิม
+
+    const months = [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ];
+
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${day} ${month} ${year}`;
+  }
 
   function loadData() {
     const year = $('#yearSelect').val();
@@ -182,7 +199,7 @@
       <tr>
         <td><span class="badge-id">${r.no}</span></td>
         <td class="fw-medium">${r.title}</td>
-        <td class="text-muted">${r.date}</td>
+        <td class="text-muted">${formatThaiDate(r.date)}</td>
         <td class="text-center"><a href="${r.link}" target="_blank" class="btn btn-sm btn-outline-primary px-3">เปิดดู</a></td>
       </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูล</td></tr>');
 
@@ -191,7 +208,7 @@
       <div class="mobile-card">
         <div class="d-flex justify-content-between align-items-start mb-2">
           <span class="badge-id">คำสั่งที่ ${r.no}</span>
-          <small class="text-muted">${r.date}</small>
+          <small class="text-muted">${formatThaiDate(r.date)}</small>
         </div>
         <div class="fw-bold text-dark mb-3">${r.title}</div>
         <a href="${r.link}" target="_blank" class="btn btn-outline-danger btn-sm w-100 py-2">เปิดดูเอกสาร</a>
