@@ -6,72 +6,167 @@
   <title>ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</title>
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.min.css" rel="stylesheet">
   
   <style>
-    :root { --primary-color: #8B0000; --secondary-color: #f8f9fa; }
-    body { background: var(--secondary-color); font-family: 'K2D', sans-serif; color: #333; }
-    .header-section { background: var(--primary-color); color: white; padding: 40px 0; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    .school-logo { max-width: 100px; margin-bottom: 15px; }
-    .search-box { margin-top: -30px; z-index: 100; position: relative; }
-    .card-search { border: none; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 20px; background: white; }
-    .mobile-card { background: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; transition: 0.3s; }
-    .mobile-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-    .btn-primary { background-color: var(--primary-color); border: none; padding: 8px 20px; border-radius: 10px; }
-    .btn-primary:hover { background-color: #a00000; }
-    .badge-id { background: #ffebeb; color: var(--primary-color); font-weight: 600; padding: 5px 12px; border-radius: 8px; }
+    :root { 
+      --primary-color: #8B0000; /* สีแดงโรงเรียน */
+      --secondary-color: #f4f6f9; 
+      --accent-color: #b08d57; /* สีทองหม่น */
+      --text-dark: #2c3e50;
+    }
+
+    body { 
+      background: var(--secondary-color); 
+      font-family: 'Sarabun', sans-serif; 
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+    
+    /* Header Section - ปรับให้ดูเป็นทางการขึ้น */
+    .header-section { 
+      background: linear-gradient(135deg, #8B0000 0%, #5a0000 100%);
+      color: white; 
+      padding: 50px 0 80px 0; 
+      border-bottom: 5px solid var(--accent-color);
+    }
+    .school-logo { 
+      max-width: 90px; 
+      margin-bottom: 20px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+    .header-section h2 { 
+      font-weight: 700; 
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+    .header-section p { 
+      font-weight: 300; 
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+    
+    /* Search Box - เรียบแต่เด่น */
+    .search-box { margin-top: -50px; z-index: 100; position: relative; }
+    .card-search { 
+      border: none; 
+      border-radius: 12px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+      padding: 30px; 
+      background: white;
+    }
+    .form-select, .form-control {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 10px 15px;
+    }
+    .form-select:focus, .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.1);
+    }
+    
+    /* Content Cards & Table */
+    .content-container { margin-top: 40px; margin-bottom: 60px; }
+    .table-container {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .table thead {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #eee;
+    }
+    .table th { font-weight: 600; color: #555; text-transform: uppercase; font-size: 0.85rem; padding: 15px; }
+    .table td { vertical-align: middle; padding: 15px; border-bottom: 1px solid #f1f1f1; }
+
+    /* Mobile View */
+    .mobile-card { 
+      background: white; 
+      border-radius: 12px; 
+      padding: 20px; 
+      margin-bottom: 15px; 
+      border-left: 5px solid var(--primary-color);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    }
+    
+    /* UI Elements */
+    .btn-primary { background-color: var(--primary-color); border: none; font-weight: 600; padding: 10px 25px; border-radius: 8px; }
+    .btn-primary:hover { background-color: #6d0000; transform: translateY(-1px); }
+    
+    .btn-success { background-color: #28a745; border: none; font-weight: 600; padding: 10px 20px; border-radius: 8px; }
+    
+    .badge-id { 
+      background: #f8ecec; 
+      color: var(--primary-color); 
+      font-weight: 700; 
+      padding: 6px 14px; 
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    
     .desktop-only { display: block; }
     .mobile-only { display: none; }
+    
     @media (max-width: 768px) {
       .desktop-only { display: none; }
       .mobile-only { display: block; }
-      .header-section h2 { font-size: 1.4rem; }
+      .header-section { padding: 40px 0 70px 0; }
+      .header-section h2 { font-size: 1.25rem; }
     }
-    .pagination .page-link { color: var(--primary-color); border-radius: 5px; margin: 0 2px; }
-    .pagination .active .page-link { background-color: var(--primary-color); border-color: var(--primary-color); }
+
+    .pagination .page-link { color: var(--primary-color); border: none; margin: 0 3px; border-radius: 6px; }
+    .pagination .active .page-link { background-color: var(--primary-color); }
   </style>
 </head>
 <body>
 
 <div class="header-section text-center">
-  <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" class="school-logo" alt="School Logo">
-  <h2>ระบบสืบค้นคำสั่ง</h2>
-  <p>โรงเรียนพิมานพิทยาสรรค์</p>
+  <div class="container">
+    <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" class="school-logo" alt="School Logo">
+    <h2>ระบบสืบค้นคำสั่งโรงเรียน</h2>
+    <p>โรงเรียนพิมานพิทยาสรรค์</p>
+  </div>
 </div>
 
 <div class="container search-box">
   <div class="card-search">
-    <div class="row g-3">
+    <div class="row g-4">
       <div class="col-md-3">
-        <label class="small text-muted ms-1">เลือกปีการศึกษา</label>
+        <label class="form-label small fw-bold text-muted">ปีการศึกษา</label>
         <select id="yearSelect" class="form-select form-select-lg" onchange="loadData()"></select>
       </div>
       <div class="col-md-7">
-        <label class="small text-muted ms-1">ค้นหาคำสั่งหรือเรื่อง</label>
-        <input type="text" id="searchInput" class="form-select-lg form-control" placeholder="พิมพ์เลขที่คำสั่ง หรือชื่อเรื่อง..." onkeyup="handleSearch()">
+        <label class="form-label small fw-bold text-muted">ค้นหาเลขที่คำสั่ง หรือ ชื่อเรื่อง</label>
+        <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="ระบุข้อมูลที่ต้องการค้นหา..." onkeyup="handleSearch()">
       </div>
       <div class="col-md-2 d-flex align-items-end">
-        <button class="btn btn-outline-secondary w-100 btn-lg" id="resetBtn" onclick="resetSearch()" style="display:none;">กลับหน้าแรก</button>
+        <button class="btn btn-outline-secondary w-100 btn-lg" id="resetBtn" onclick="resetSearch()" style="display:none; border-radius: 8px;">ล้างค่า</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container mt-5 mb-5">
+<div class="container content-container">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 id="dataCount" class="mb-0 text-muted">กำลังดึงข้อมูล...</h5>
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">➕ เพิ่มคำสั่งใหม่</button>
+    <div class="d-flex align-items-center">
+        <div class="vr me-3" style="width: 4px; background-color: var(--primary-color); opacity: 1; height: 30px;"></div>
+        <h5 id="dataCount" class="mb-0 fw-bold">กำลังดึงข้อมูล...</h5>
+    </div>
+    <button class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#addModal">
+        <i class="bi bi-plus-lg"></i> + เพิ่มข้อมูลใหม่
+    </button>
   </div>
 
-  <div class="desktop-only card border-0 shadow-sm rounded-4 p-3 bg-white">
-    <table class="table table-hover">
-      <thead class="table-light">
+  <div class="desktop-only table-container">
+    <table class="table table-hover mb-0">
+      <thead>
         <tr>
-          <th width="15%">คำสั่งที่</th>
-          <th width="55%">เรื่อง</th>
-          <th width="15%">วันที่สั่ง</th>
-          <th width="15%" class="text-center">ดูเอกสาร</th>
+          <th class="text-center" width="12%">เลขที่</th>
+          <th width="53%">เรื่อง / หัวข้อคำสั่ง</th>
+          <th width="20%">วันที่สั่งการ</th>
+          <th class="text-center" width="15%">เอกสาร</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -87,18 +182,18 @@
 
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
-      <div class="modal-header border-0 bg-light" style="border-radius: 20px 20px 0 0;">
-        <h5 class="modal-title fw-bold">เพิ่มรายการคำสั่งใหม่</h5>
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+      <div class="modal-header border-0 bg-light" style="border-radius: 15px 15px 0 0; padding: 20px 30px;">
+        <h5 class="modal-title fw-bold" style="color: var(--primary-color);">เพิ่มรายการคำสั่งใหม่</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-4">
-        <div class="mb-3"><label class="form-label">เลขที่คำสั่ง</label><input type="text" id="m_no" class="form-control" placeholder="เช่น 123/2569"></div>
-        <div class="mb-3"><label class="form-label">เรื่อง/หัวข้อคำสั่ง</label><input type="text" id="m_title" class="form-control" placeholder="ระบุชื่อเรื่องคำสั่ง"></div>
-        <div class="mb-3"><label class="form-label">สั่ง ณ วันที่</label><input type="text" id="m_date" class="form-control" placeholder="เช่น 1 เม.ย. 69"></div>
-        <div class="mb-3"><label class="form-label">เลือกไฟล์เอกสาร (PDF/รูปภาพ)</label><input type="file" id="m_file" class="form-control"></div>
+      <div class="modal-body p-4" style="padding: 30px !important;">
+        <div class="mb-3"><label class="form-label fw-bold">เลขที่คำสั่ง</label><input type="text" id="m_no" class="form-control" placeholder="ตัวอย่าง: 123/2569"></div>
+        <div class="mb-3"><label class="form-label fw-bold">เรื่อง/หัวข้อคำสั่ง</label><input type="text" id="m_title" class="form-control" placeholder="ระบุชื่อเรื่องคำสั่ง"></div>
+        <div class="mb-3"><label class="form-label fw-bold">สั่ง ณ วันที่</label><input type="text" id="m_date" class="form-control" placeholder="เช่น 1 เม.ย. 69"></div>
+        <div class="mb-3"><label class="form-label fw-bold">ไฟล์เอกสารแนบ</label><input type="file" id="m_file" class="form-control"></div>
       </div>
-      <div class="modal-footer border-0 p-4">
+      <div class="modal-footer border-0 p-4 pt-0">
         <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">ยกเลิก</button>
         <button type="button" id="btnSave" class="btn btn-primary px-4" onclick="handleSave()">💾 บันทึกข้อมูล</button>
       </div>
@@ -129,11 +224,11 @@
   });
 
   function formatThaiDate(dateString) {
-    if (!dateString) return "";
+    if (!dateString) return "-";
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
     const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear() + 543}`;
   }
 
   function loadData() {
@@ -142,7 +237,6 @@
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getData', year: year}) })
     .then(res => res.json())
     .then(data => {
-      // ปรับปรุงการเรียงลำดับ: เรียงจากเลขที่คำสั่งมากไปหาน้อย (ล่าสุดอยู่บน)
       fullData = data.sort((a, b) => {
         const noA = parseFloat(a.no.toString().split('/')[0]) || 0;
         const noB = parseFloat(b.no.toString().split('/')[0]) || 0;
@@ -170,28 +264,28 @@
   }
 
   function renderContent() {
-    $('#dataCount').text(`พบทั้งหมด ${filteredData.length} รายการ`);
+    $('#dataCount').text(`รายการคำสั่งปี ${$('#yearSelect').val()} (พบ ${filteredData.length} รายการ)`);
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const items = filteredData.slice(start, end);
 
     $('#tableBody').html(items.map(r => `
       <tr>
-        <td><span class="badge-id">${r.no}</span></td>
-        <td class="fw-medium">${r.title}</td>
-        <td class="text-muted">${formatThaiDate(r.date)}</td>
-        <td class="text-center"><a href="${r.link}" target="_blank" class="btn btn-sm btn-outline-primary px-3">เปิดดู</a></td>
-      </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูล</td></tr>');
+        <td class="text-center"><span class="badge-id">${r.no}</span></td>
+        <td class="fw-semibold">${r.title}</td>
+        <td class="text-muted"><small>${formatThaiDate(r.date)}</small></td>
+        <td class="text-center"><a href="${r.link}" target="_blank" class="btn btn-sm btn-outline-primary px-3 shadow-sm">เรียกดู</a></td>
+      </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูลในฐานระบบ</td></tr>');
 
     $('#mobileContainer').html(items.map(r => `
       <div class="mobile-card">
-        <div class="d-flex justify-content-between align-items-start mb-2">
-          <span class="badge-id">คำสั่งที่ ${r.no}</span>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge-id">ที่ ${r.no}</span>
           <small class="text-muted">${formatThaiDate(r.date)}</small>
         </div>
-        <div class="fw-bold text-dark mb-3">${r.title}</div>
-        <a href="${r.link}" target="_blank" class="btn btn-outline-danger btn-sm w-100 py-2">เปิดดูเอกสาร</a>
-      </div>`).join('') || '<div class="text-center p-5 text-muted">ไม่พบข้อมูล</div>');
+        <div class="fw-bold text-dark mb-3" style="font-size: 1.1rem;">${r.title}</div>
+        <a href="${r.link}" target="_blank" class="btn btn-primary btn-sm w-100 py-2 shadow-sm">เปิดดูเอกสารต้นฉบับ</a>
+      </div>`).join('') || '<div class="text-center p-5 text-muted">ไม่พบข้อมูลในฐานระบบ</div>');
 
     renderPagination();
   }
@@ -200,51 +294,27 @@
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     let html = '';
     for (let i = 1; i <= totalPages; i++) {
-      html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                <a class="page-link" href="#" onclick="changePage(event, ${i})">${i}</a>
-               </li>`;
+      html += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(event, ${i})">${i}</a></li>`;
     }
     $('#pagination').html(html);
   }
 
-  function changePage(e, page) {
-    e.preventDefault();
-    currentPage = page;
-    renderContent();
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }
+  function changePage(e, page) { e.preventDefault(); currentPage = page; renderContent(); window.scrollTo({top: 0, behavior: 'smooth'}); }
 
   function handleSave() {
     const fileInput = document.getElementById('m_file');
     if(!$('#m_no').val() || !$('#m_title').val()) {
-        Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกเลขที่คำสั่งและชื่อเรื่องด้วยค่ะ', confirmButtonColor: '#8B0000' });
+        Swal.fire({ icon: 'warning', title: 'กรอกข้อมูลไม่ครบ', text: 'กรุณาระบุเลขที่คำสั่งและชื่อเรื่องด้วยค่ะ', confirmButtonColor: '#8B0000' });
         return;
     }
-    Swal.fire({
-      title: 'กำลังบันทึกข้อมูล',
-      text: 'กรุณารอสักครู่ระบบกำลังอัปโหลดไฟล์...',
-      allowOutsideClick: false,
-      didOpen: () => { Swal.showLoading(); }
-    });
-    const payload = {
-      year: $('#yearSelect').val(),
-      no: $('#m_no').val(),
-      title: $('#m_title').val(),
-      date: $('#m_date').val()
-    };
+    Swal.fire({ title: 'กำลังประมวลผล', text: 'ระบบกำลังนำข้อมูลลงฐานข้อมูล กรุณารอสักครู่...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+    const payload = { year: $('#yearSelect').val(), no: $('#m_no').val(), title: $('#m_title').val(), date: $('#m_date').val() };
     if (fileInput.files.length > 0) {
       const file = fileInput.files[0];
       const reader = new FileReader();
-      reader.onload = function(e) {
-        payload.fileBase64 = e.target.result.split(',')[1];
-        payload.fileMime = file.type;
-        payload.fileName = file.name;
-        sendToServer(payload);
-      };
+      reader.onload = function(e) { payload.fileBase64 = e.target.result.split(',')[1]; payload.fileMime = file.type; payload.fileName = file.name; sendToServer(payload); };
       reader.readAsDataURL(file);
-    } else {
-      sendToServer(payload);
-    }
+    } else { sendToServer(payload); }
   }
 
   function sendToServer(payload) {
@@ -252,17 +322,9 @@
     .then(res => res.json())
     .then(res => {
       if(res.status === "success") {
-        Swal.fire({
-          icon: 'success',
-          title: 'บันทึกสำเร็จ!',
-          text: 'ข้อมูลคำสั่งของคุณถูกบันทึกลงระบบเรียบร้อยแล้ว',
-          confirmButtonColor: '#8B0000',
-          timer: 2000
-        }).then(() => {
-          location.reload();
-        });
+        Swal.fire({ icon: 'success', title: 'ดำเนินการสำเร็จ', text: 'บันทึกข้อมูลเข้าสู่ระบบเรียบร้อยแล้ว', confirmButtonColor: '#8B0000', timer: 2000 }).then(() => { location.reload(); });
       } else {
-        Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message, confirmButtonColor: '#8B0000' });
+        Swal.fire({ icon: 'error', title: 'เกิดความผิดพลาด', text: res.message, confirmButtonColor: '#8B0000' });
       }
     });
   }
