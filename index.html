@@ -13,194 +13,200 @@
     :root { 
       --school-red: #8B0000;
       --school-red-dark: #5a0000;
-      --accent-gold: #b08d57;
-      --bg-soft: #f4f7f6;
-      --text-main: #2d3436;
+      --bg-body: #ffffff;
+      --bg-input: #f1f3f4;
+      --text-main: #202124;
     }
 
     body { 
-      background-color: var(--bg-soft); 
+      background-color: var(--bg-body); 
       font-family: 'Sarabun', sans-serif; 
       color: var(--text-main);
     }
     
-    /* --- Mini Header Section --- */
-    .header-mini {
-      background: linear-gradient(135deg, var(--school-red) 0%, var(--school-red-dark) 100%);
-      color: white;
-      padding: 15px 0;
-      border-bottom: 3px solid var(--accent-gold);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .school-logo-mini { max-width: 50px; margin-right: 15px; }
-    .header-title-mini { font-weight: 700; font-size: 1.25rem; margin: 0; letter-spacing: 0.5px; }
-    .header-sub-mini { font-weight: 300; font-size: 0.85rem; opacity: 0.85; }
-
-    /* --- Floating Search Card --- */
-    .search-container { margin-top: 25px; }
-    .card-search-modern {
-      border: none;
-      border-radius: 20px;
-      background: white;
-      padding: 20px 30px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-    }
-
-    /* --- Content & Data Display --- */
-    .section-title {
-      border-left: 5px solid var(--school-red);
-      padding-left: 15px;
-      margin: 30px 0 20px 0;
-      font-weight: 700;
-      color: var(--school-red);
-    }
-
-    /* ตารางแบบเน้นหัวข้อ */
-    .table-modern {
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-    }
-    .table-modern thead { background: #fafafa; }
-    .table-modern th { 
-        padding: 15px; 
-        font-size: 0.8rem; 
-        color: #888; 
-        text-transform: uppercase; 
-        border: none;
-    }
-    .table-modern td { padding: 20px 15px; vertical-align: middle; border-bottom: 1px solid #f1f1f1; }
-    
-    /* หัวข้อคำสั่ง (ให้เด่น) */
-    .doc-title { 
-        font-size: 1.05rem; 
-        font-weight: 700; 
-        color: var(--text-main); 
-        display: block;
-        line-height: 1.4;
-    }
-    .doc-no { font-size: 0.85rem; color: var(--school-red); font-weight: 600; }
-
-    /* --- Buttons & Badges --- */
-    .btn-school {
+    /* --- Compact App Header --- */
+    .app-header {
       background: var(--school-red);
       color: white;
-      border-radius: 12px;
-      padding: 8px 20px;
-      font-weight: 600;
-      border: none;
-      transition: all 0.3s;
+      padding: 12px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .btn-school:hover { background: var(--school-red-dark); transform: translateY(-2px); color: white; box-shadow: 0 5px 15px rgba(139,0,0,0.3); }
-    
-    .btn-open {
-      color: var(--school-red);
-      border: 1.5px solid var(--school-red);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      background: transparent;
-      transition: 0.2s;
-    }
-    .btn-open:hover { background: var(--school-red); color: white; }
+    .app-logo { max-width: 40px; margin-right: 12px; }
+    .app-brand-name { font-weight: 700; font-size: 1.15rem; margin: 0; }
 
-    /* --- Pagination (สีเทาตามที่ต้องการ) --- */
-    .pagination .page-link { 
-      border: none; 
-      color: #666; 
-      margin: 0 5px; 
-      border-radius: 10px !important; 
-      background: #eee;
-      width: 38px;
-      height: 38px;
+    /* --- Sticky Search Bar Section --- */
+    .search-wrapper {
+      padding: 20px 0;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .modern-search-bar {
+      background: var(--bg-input);
+      border-radius: 24px;
+      padding: 5px 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+    .modern-search-bar:focus-within {
+      background: #fff;
+      border-color: var(--school-red);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .modern-search-bar input {
+      background: transparent;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    /* --- Content Styling --- */
+    .section-info {
+      margin: 25px 0 15px 0;
+      color: #5f6368;
+      font-weight: 600;
+    }
+
+    /* ตารางเน้นหัวข้อเด่น */
+    .table-app { width: 100%; border-collapse: collapse; }
+    .table-app th { 
+      padding: 15px; 
+      font-size: 0.85rem; 
+      color: #70757a; 
+      border-bottom: 2px solid #f1f1f1;
+      text-transform: uppercase;
+    }
+    .table-app td { padding: 18px 15px; border-bottom: 1px solid #f1f1f1; vertical-align: middle; }
+    .table-app tr:hover { background-color: #f8f9fa; }
+
+    .doc-title { 
+      font-size: 1.1rem; 
+      font-weight: 700; 
+      color: var(--text-main); 
+      display: block;
+      line-height: 1.5;
+      text-decoration: none;
+    }
+    .doc-no-badge { 
+      font-size: 0.85rem; 
+      color: var(--school-red); 
+      font-weight: 700;
+      background: #fff0f0;
+      padding: 2px 10px;
+      border-radius: 5px;
+    }
+
+    /* --- Buttons --- */
+    .btn-add-minimal {
+      background: white;
+      color: var(--school-red);
+      border: 1.5px solid var(--school-red);
+      border-radius: 20px;
+      padding: 8px 20px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-add-minimal:hover { background: var(--school-red); color: white; }
+
+    .btn-view-app {
+      color: #5f6368;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 5px 15px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .btn-view-app:hover { background: #f8f9fa; color: var(--school-red); border-color: var(--school-red); }
+
+    /* --- Pagination (สีเทา) --- */
+    .pagination .page-link { 
+      border: none; 
+      color: #5f6368; 
+      margin: 0 4px; 
+      border-radius: 50% !important; 
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: #f1f3f4;
     }
     .pagination .active .page-link { 
-      background-color: #d1d1d1 !important; 
-      color: #333 !important; 
+      background-color: #dadce0 !important; 
+      color: #202124 !important; 
       font-weight: 700;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    /* --- Mobile Card Style --- */
-    .mobile-doc-card {
-      background: white;
-      border-radius: 15px;
+    /* --- Mobile Card --- */
+    .mobile-doc-item {
       padding: 20px;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-      border-top: 4px solid var(--school-red);
+      border-bottom: 1px solid #eee;
     }
+    .mobile-doc-item:active { background-color: #f1f3f4; }
 
     @media (max-width: 768px) {
-      .header-title-mini { font-size: 1.1rem; }
-      .search-container { margin-top: 15px; }
-      .card-search-modern { padding: 20px; }
+      .search-wrapper { padding: 15px 0; }
+      .app-brand-name { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
 
-<header class="header-mini">
+<header class="app-header">
   <div class="container d-flex align-items-center">
-    <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" class="school-logo-mini" alt="Logo">
-    <div>
-      <h1 class="header-title-mini">ระบบสืบค้นคำสั่งโรงเรียน</h1>
-      <div class="header-sub-mini">โรงเรียนพิมานพิทยาสรรค์</div>
-    </div>
+    <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" class="app-logo" alt="Logo">
+    <h1 class="app-brand-name">ระบบสืบค้นคำสั่ง | <span style="font-weight:300;">โรงเรียนพิมานพิทยาสรรค์</span></h1>
   </div>
 </header>
 
-<div class="container">
-  
-  <div class="search-container">
-    <div class="card-search-modern">
-      <div class="row g-3">
-        <div class="col-md-3">
-          <label class="form-label small fw-bold text-muted">ปีการศึกษา</label>
-          <select id="yearSelect" class="form-select border-0 bg-light" onchange="loadData()" style="border-radius: 10px;"></select>
+<section class="search-wrapper shadow-sm">
+  <div class="container">
+    <div class="row align-items-center g-3">
+      <div class="col-6 col-md-2">
+         <select id="yearSelect" class="form-select border-0 fw-bold" onchange="loadData()" style="color: var(--school-red); font-size: 1.1rem; cursor: pointer; background-color: transparent;">
+         </select>
+      </div>
+      <div class="col-12 col-md-7 order-3 order-md-2">
+        <div class="modern-search-bar">
+          <i class="bi bi-search text-muted"></i>
+          <input type="text" id="searchInput" placeholder="ค้นหาเลขที่หรือชื่อเรื่องคำสั่ง..." onkeyup="handleSearch()">
+          <i class="bi bi-x-circle-fill text-muted" id="resetBtn" onclick="resetSearch()" style="display:none; cursor:pointer;"></i>
         </div>
-        <div class="col-md-7">
-          <label class="form-label small fw-bold text-muted">ระบุคำค้นหา</label>
-          <div class="input-group">
-            <span class="input-group-text border-0 bg-light" style="border-radius: 10px 0 0 10px;"><i class="bi bi-search"></i></span>
-            <input type="text" id="searchInput" class="form-control border-0 bg-light" style="border-radius: 0 10px 10px 0;" placeholder="ค้นหาด้วยเลขที่ หรือชื่อคำสั่ง..." onkeyup="handleSearch()">
-          </div>
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-          <button class="btn btn-light w-100 py-2" id="resetBtn" onclick="resetSearch()" style="display:none; border-radius: 10px;">ล้างค่า</button>
-        </div>
+      </div>
+      <div class="col-6 col-md-3 order-2 order-md-3 text-end">
+        <button class="btn-add-minimal" data-bs-toggle="modal" data-bs-target="#addModal">
+          <i class="bi bi-plus-lg me-1"></i> เพิ่มข้อมูล
+        </button>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="d-flex justify-content-between align-items-end mt-2">
-    <div class="section-title">
-        <h5 id="dataCount" class="mb-0">กำลังโหลด...</h5>
-    </div>
-    <button class="btn btn-school mb-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#addModal">
-      <i class="bi bi-plus-lg me-1"></i> เพิ่มข้อมูล
-    </button>
+<div class="container">
+  <div class="section-info d-flex justify-content-between align-items-center">
+      <span id="dataCount">กำลังโหลดข้อมูล...</span>
   </div>
 
-  <div class="table-modern d-none d-md-block">
-    <table class="table table-hover mb-0">
+  <div class="d-none d-md-block">
+    <table class="table-app">
       <thead>
         <tr>
-          <th class="text-center" width="15%">เลขที่</th>
-          <th width="50%">หัวข้อคำสั่ง</th>
-          <th width="20%">วันที่ลงนาม</th>
-          <th class="text-center" width="15%">เอกสาร</th>
+          <th width="15%" class="text-center">เลขที่คำสั่ง</th>
+          <th width="55%">หัวข้อ/ชื่อเรื่องคำสั่ง</th>
+          <th width="18%">วันที่ประกาศ</th>
+          <th width="12%" class="text-center">เอกสาร</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
 
-  <div id="mobileContainer" class="d-md-none"></div>
+  <div id="mobileContainer" class="d-md-none border-top"></div>
 
   <nav class="mt-5 pb-5">
     <ul class="pagination justify-content-center" id="pagination"></ul>
@@ -209,20 +215,32 @@
 
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0" style="border-radius: 25px;">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
       <div class="modal-header border-0 p-4 pb-0">
         <h5 class="modal-title fw-bold" style="color: var(--school-red);">บันทึกคำสั่งใหม่</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
-        <div class="mb-3"><label class="form-label small fw-bold">เลขที่คำสั่ง</label><input type="text" id="m_no" class="form-control border-0 bg-light" style="border-radius: 10px;" placeholder="ตัวอย่าง: 123/2569"></div>
-        <div class="mb-3"><label class="form-label small fw-bold">หัวข้อคำสั่ง</label><input type="text" id="m_title" class="form-control border-0 bg-light" style="border-radius: 10px;" placeholder="ชื่อเรื่องของคำสั่ง"></div>
-        <div class="mb-3"><label class="form-label small fw-bold">วันที่ลงนาม</label><input type="text" id="m_date" class="form-control border-0 bg-light" style="border-radius: 10px;" placeholder="เช่น 1 ม.ค. 69"></div>
-        <div class="mb-3"><label class="form-label small fw-bold">แนบไฟล์</label><input type="file" id="m_file" class="form-control border-0 bg-light" style="border-radius: 10px;"></div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">เลขที่คำสั่ง</label>
+          <input type="text" id="m_no" class="form-control border-0 bg-light py-2" placeholder="เช่น 001/2569" style="border-radius:10px;">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">หัวข้อคำสั่ง</label>
+          <input type="text" id="m_title" class="form-control border-0 bg-light py-2" placeholder="ระบุชื่อเรื่องคำสั่ง" style="border-radius:10px;">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">วันที่ลงนาม</label>
+          <input type="text" id="m_date" class="form-control border-0 bg-light py-2" placeholder="เช่น 21 เม.ย. 69" style="border-radius:10px;">
+        </div>
+        <div class="mb-2">
+          <label class="form-label small fw-bold text-muted">แนบไฟล์เอกสาร</label>
+          <input type="file" id="m_file" class="form-control border-0 bg-light py-2" style="border-radius:10px;">
+        </div>
       </div>
       <div class="modal-footer border-0 p-4 pt-0">
-        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: 12px;">ยกเลิก</button>
-        <button type="button" id="btnSave" class="btn btn-school px-4" onclick="handleSave()">บันทึกข้อมูล</button>
+        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius:12px;">ยกเลิก</button>
+        <button type="button" id="btnSave" class="btn btn-school px-4" onclick="handleSave()" style="border-radius:12px;">💾 บันทึกข้อมูล</button>
       </div>
     </div>
   </div>
@@ -245,7 +263,7 @@
     .then(res => res.json())
     .then(years => {
       const yearSelect = $('#yearSelect');
-      years.forEach(y => yearSelect.append(`<option value="${y}">${y}</option>`));
+      years.forEach(y => yearSelect.append(`<option value="${y}">ปี ${y}</option>`));
       loadData();
     });
   });
@@ -259,7 +277,7 @@
   }
 
   function loadData() {
-    const year = $('#yearSelect').val();
+    const year = $('#yearSelect').val().replace('ปี ', '');
     $('#dataCount').text('กำลังโหลด...');
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getData', year: year}) })
     .then(res => res.json())
@@ -291,29 +309,28 @@
   }
 
   function renderContent() {
-    $('#dataCount').text(`ปีการศึกษา ${$('#yearSelect').val()} (${filteredData.length} รายการ)`);
+    $('#dataCount').text(`พบทั้งหมด ${filteredData.length} รายการ`);
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const items = filteredData.slice(start, end);
 
-    // Desktop Table
+    // Desktop
     $('#tableBody').html(items.map(r => `
       <tr>
-        <td class="text-center"><span class="doc-no">${r.no}</span></td>
-        <td><span class="doc-title">${r.title}</span></td>
-        <td class="text-muted"><i class="bi bi-calendar-check me-2"></i>${formatThaiDate(r.date)}</td>
-        <td class="text-center"><a href="${r.link}" target="_blank" class="btn btn-open px-3"><i class="bi bi-eye"></i> เปิดดู</a></td>
-      </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูลในระบบ</td></tr>');
+        <td class="text-center"><span class="doc-no-badge">${r.no}</span></td>
+        <td><a href="${r.link}" target="_blank" class="doc-title">${r.title}</a></td>
+        <td class="text-muted" style="font-size:0.9rem;"><i class="bi bi-calendar3 me-2"></i>${formatThaiDate(r.date)}</td>
+        <td class="text-center"><a href="${r.link}" target="_blank" class="btn-view-app">เปิดดู</a></td>
+      </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูล</td></tr>');
 
-    // Mobile Cards
+    // Mobile
     $('#mobileContainer').html(items.map(r => `
-      <div class="mobile-doc-card" onclick="window.open('${r.link}', '_blank')">
+      <div class="mobile-doc-item" onclick="window.open('${r.link}', '_blank')">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="doc-no">คำสั่งที่ ${r.no}</span>
+          <span class="doc-no-badge">ที่ ${r.no}</span>
           <small class="text-muted">${formatThaiDate(r.date)}</small>
         </div>
         <div class="doc-title">${r.title}</div>
-        <div class="text-end mt-2"><small style="color: var(--school-red);">แตะเพื่อเปิดดู <i class="bi bi-arrow-right"></i></small></div>
       </div>`).join('') || '<div class="text-center p-5 text-muted">ไม่พบข้อมูล</div>');
 
     renderPagination();
@@ -322,6 +339,7 @@
   function renderPagination() {
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     let html = '';
+    if(totalPages <= 1) { $('#pagination').html(''); return; }
     for (let i = 1; i <= totalPages; i++) {
       html += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(event, ${i})">${i}</a></li>`;
     }
@@ -337,7 +355,7 @@
         return;
     }
     Swal.fire({ title: 'กำลังบันทึก...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-    const payload = { year: $('#yearSelect').val(), no: $('#m_no').val(), title: $('#m_title').val(), date: $('#m_date').val() };
+    const payload = { year: $('#yearSelect').val().replace('ปี ', ''), no: $('#m_no').val(), title: $('#m_title').val(), date: $('#m_date').val() };
     if (fileInput.files.length > 0) {
       const file = fileInput.files[0];
       const reader = new FileReader();
