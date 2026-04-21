@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwxh5tgD_dzUbX2GxQ2H0QraLRkQHNNSoVXUXWEZLXzdG823C6fP2Z4QOy_MUS_6btdog/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzC4G6RIPgxHs3Qla-QS-ftjuubT3hZw1e412GPzXkv1vvjqcdzP5Gn2sMwlMByGUZQUQ/exec";
 let dataTable;
 
 /* ===== Mobile Card State ===== */
