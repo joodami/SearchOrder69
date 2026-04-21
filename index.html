@@ -1,127 +1,269 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <title>ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary-color: #8B0000; --secondary-color: #f8f9fa; }
+    body { background: var(--secondary-color); font-family: 'K2D', sans-serif; color: #333; }
+    
+    /* Header & Branding */
+    .header-section { background: var(--primary-color); color: white; padding: 40px 0; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .school-logo { max-width: 100px; margin-bottom: 15px; }
+    
+    /* Search Box */
+    .search-box { margin-top: -30px; z-index: 100; position: relative; }
+    .card-search { border: none; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 20px; background: white; }
+    
+    /* Content Cards (Mobile) */
+    .mobile-card { background: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; transition: 0.3s; }
+    .mobile-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .card-label { font-size: 0.8rem; color: #888; margin-bottom: 2px; }
+    
+    /* UI Elements */
+    .btn-primary { background-color: var(--primary-color); border: none; padding: 8px 20px; border-radius: 10px; }
+    .btn-primary:hover { background-color: #a00000; }
+    .badge-id { background: #ffebeb; color: var(--primary-color); font-weight: 600; padding: 5px 12px; border-radius: 8px; }
+    
+    /* Responsive Table */
+    .desktop-only { display: block; }
+    .mobile-only { display: none; }
+    
+    @media (max-width: 768px) {
+      .desktop-only { display: none; }
+      .mobile-only { display: block; }
+      .header-section h2 { font-size: 1.4rem; }
+    }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="style.css">
+    /* Pagination Styling */
+    .pagination .page-link { color: var(--primary-color); border-radius: 5px; margin: 0 2px; }
+    .pagination .active .page-link { background-color: var(--primary-color); border-color: var(--primary-color); }
+  </style>
 </head>
-
 <body>
-<div class="container container-md">
-  <br>
 
-  <div class="header-box text-center mb-4">
-    <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png"
-     class="school-logo"
-     loading="lazy">
-    <h5 id="titleYear">ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</h5>
-  </div>
-
-  <div class="form-group d-flex justify-content-center">
-    <div class="input-group w-100 w-md-auto flex-wrap align-items-center">
-      <div class="input-group-prepend">
-        <span class="input-group-text bg-white">📅 <strong class="ml-1">เลือกปี</strong></span>
-      </div>
-      <select id="yearSelect" class="form-control" onchange="loadData()"></select>
-      <div class="input-group-append">
-        <span class="badge badge-success ml-2 align-self-center" id="currentYearBadge">ปีปัจจุบัน</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="mb-3 d-flex justify-content-end">
-    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#newCommandModal">
-      ➕ เพิ่มคำสั่งใหม่
-    </button>
-  </div>
-
-  <div class="card shadow-sm">
-    <div class="card-body">
-
-      <!-- Mobile Search -->
-      <div class="d-md-none mb-3">
-        <input id="mobileSearch" class="form-control" placeholder="ค้นหาคำสั่ง..." />
-      </div>
-
-      <!-- Mobile Card -->
-      <div id="mobileCardContainer" class="d-md-none"></div>
-      <div id="mobilePagination" class="d-md-none text-center mt-3"></div>
-
-      <!-- Loading Spinner -->
-<div id="loadingSpinner" class="text-center my-3">
-  <div class="spinner-border text-danger" role="status">
-    <span class="sr-only">กำลังโหลด...</span>
-  </div>
-  <div>กำลังโหลดข้อมูล...</div>
+<div class="header-section text-center">
+  <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" class="school-logo" alt="School Logo">
+  <h2>ระบบสืบค้นคำสั่ง</h2>
+  <p>โรงเรียนพิมานพิทยาสรรค์</p>
 </div>
 
-      <!-- Table -->
-      <div class="table-responsive">
-        <table id="data-table" class="table table-striped table-bordered" style="display:none"></table>
+<div class="container search-box">
+  <div class="card-search">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="small text-muted ms-1">เลือกปีการศึกษา</label>
+        <select id="yearSelect" class="form-select form-select-lg" onchange="loadData()"></select>
       </div>
-
-      <div class="mt-3 text-center">
-        <button id="resetBtn" class="btn btn-outline-danger d-none">
-          🏠 กลับหน้าแรก
-        </button>
+      <div class="col-md-7">
+        <label class="small text-muted ms-1">ค้นหาคำสั่งหรือเรื่อง</label>
+        <input type="text" id="searchInput" class="form-select-lg form-control" placeholder="พิมพ์เลขที่คำสั่ง หรือชื่อเรื่อง..." onkeyup="handleSearch()">
       </div>
-
+      <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-outline-secondary w-100 btn-lg" id="resetBtn" onclick="resetSearch()" style="display:none;">กลับหน้าแรก</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="newCommandModal">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">เพิ่มคำสั่งใหม่</h5>
-        <button class="close" data-dismiss="modal">❌</button>
-      </div>
+<div class="container mt-5 mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 id="dataCount" class="mb-0 text-muted">กำลังดึงข้อมูล...</h5>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">➕ เพิ่มคำสั่งใหม่</button>
+  </div>
 
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group col-md-2">
-            <label>คำสั่งที่</label>
-            <input class="form-control" id="commandNumberModal">
-          </div>
-          <div class="form-group col-md-4">
-            <label>เรื่อง</label>
-            <input class="form-control" id="topicModal">
-          </div>
-          <div class="form-group col-md-3">
-            <label>สั่ง ณ วันที่</label>
-            <input class="form-control" id="orderDateModal">
-          </div>
-          <div class="form-group col-md-3">
-            <label>ไฟล์</label>
-            <input type="file" class="form-control-file" id="fileInputModal">
-          </div>
+  <div class="desktop-only card border-0 shadow-sm rounded-4 p-3 bg-white">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th width="15%">คำสั่งที่</th>
+          <th width="55%">เรื่อง</th>
+          <th width="15%">วันที่สั่ง</th>
+          <th width="15%" class="text-center">ดูเอกสาร</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div id="mobileContainer" class="mobile-only"></div>
+
+  <nav class="mt-5">
+    <ul class="pagination justify-content-center" id="pagination"></ul>
+  </nav>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+      <div class="modal-header border-0 bg-light" style="border-radius: 20px 20px 0 0;">
+        <h5 class="modal-title fw-bold">เพิ่มรายการคำสั่งใหม่</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="mb-3"><label class="form-label">เลขที่คำสั่ง</label><input type="text" id="m_no" class="form-control" placeholder="เช่น 123/2569"></div>
+        <div class="mb-3"><label class="form-label">เรื่อง/หัวข้อคำสั่ง</label><input type="text" id="m_title" class="form-control" placeholder="ระบุชื่อเรื่องคำสั่ง"></div>
+        <div class="mb-3"><label class="form-label">สั่ง ณ วันที่</label><input type="text" id="m_date" class="form-control" placeholder="เช่น 1 เม.ย. 69"></div>
+        <div class="mb-3"><label class="form-label">เลือกไฟล์เอกสาร (PDF/รูปภาพ)</label><input type="file" id="m_file" class="form-control"></div>
+      </div>
+      <div class="modal-footer border-0 p-4">
+        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" id="btnSave" class="btn btn-primary px-4" onclick="handleSave()">💾 บันทึกข้อมูล</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // 🔴 แก้ไข URL ของคุณที่นี่
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbzvh9ILzGbqFyL-ZK8YYyIs-UZKlxEIcTwYSws8uiKkrMMmU3Db7SJnr61QyVHd-jxuSQ/exec";
+  
+  let fullData = [];
+  let filteredData = [];
+  let currentPage = 1;
+  const rowsPerPage = 20;
+
+  $(document).ready(function() {
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getYears'}) })
+    .then(res => res.json())
+    .then(years => {
+      const yearSelect = $('#yearSelect');
+      years.forEach(y => yearSelect.append(`<option value="${y}">${y}</option>`));
+      loadData();
+    });
+  });
+
+  function loadData() {
+    const year = $('#yearSelect').val();
+    $('#dataCount').text('กำลังโหลดข้อมูล...');
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getData', year: year}) })
+    .then(res => res.json())
+    .then(data => {
+      fullData = data.reverse(); 
+      filteredData = [...fullData];
+      renderContent();
+    });
+  }
+
+  function handleSearch() {
+    const q = $('#searchInput').val().toLowerCase();
+    filteredData = fullData.filter(i => 
+      i.no.toString().toLowerCase().includes(q) || 
+      i.title.toLowerCase().includes(q)
+    );
+    $('#resetBtn').toggle(q.length > 0);
+    currentPage = 1;
+    renderContent();
+  }
+
+  function resetSearch() {
+    $('#searchInput').val('');
+    $('#resetBtn').hide();
+    filteredData = [...fullData];
+    currentPage = 1;
+    renderContent();
+  }
+
+  function renderContent() {
+    $('#dataCount').text(`พบทั้งหมด ${filteredData.length} รายการ`);
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const items = filteredData.slice(start, end);
+
+    // Render Table (Desktop)
+    $('#tableBody').html(items.map(r => `
+      <tr>
+        <td><span class="badge-id">${r.no}</span></td>
+        <td class="fw-medium">${r.title}</td>
+        <td class="text-muted">${r.date}</td>
+        <td class="text-center"><a href="${r.link}" target="_blank" class="btn btn-sm btn-outline-primary px-3">เปิดดู</a></td>
+      </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูล</td></tr>');
+
+    // Render Cards (Mobile)
+    $('#mobileContainer').html(items.map(r => `
+      <div class="mobile-card">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <span class="badge-id">คำสั่งที่ ${r.no}</span>
+          <small class="text-muted">${r.date}</small>
         </div>
-      </div>
+        <div class="fw-bold text-dark mb-3">${r.title}</div>
+        <a href="${r.link}" target="_blank" class="btn btn-outline-danger btn-sm w-100 py-2">เปิดดูเอกสาร</a>
+      </div>`).join('') || '<div class="text-center p-5 text-muted">ไม่พบข้อมูล</div>');
 
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-        <button class="btn btn-primary" onclick="submitFormModal()">💾 บันทึก</button>
-      </div>
-    </div>
-  </div>
-</div>
+    renderPagination();
+  }
 
-<div id="saveNotification">บันทึกเรียบร้อยแล้ว</div>
+  function renderPagination() {
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    let html = '';
+    for (let i = 1; i <= totalPages; i++) {
+      html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="changePage(event, ${i})">${i}</a>
+               </li>`;
+    }
+    $('#pagination').html(html);
+  }
 
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="script.js"></script>
+  function changePage(e, page) {
+    e.preventDefault();
+    currentPage = page;
+    renderContent();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function handleSave() {
+    const btn = $('#btnSave');
+    const fileInput = document.getElementById('m_file');
+    
+    if(!$('#m_no').val() || !$('#m_title').val()) return alert("กรุณากรอกข้อมูลหลักให้ครบถ้วน");
+
+    btn.prop('disabled', true).text('กำลังบันทึก...');
+
+    const payload = {
+      year: $('#yearSelect').val(),
+      no: $('#m_no').val(),
+      title: $('#m_title').val(),
+      date: $('#m_date').val()
+    };
+
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        payload.fileBase64 = e.target.result.split(',')[1];
+        payload.fileMime = file.type;
+        payload.fileName = file.name;
+        sendToServer(payload);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      sendToServer(payload);
+    }
+  }
+
+  function sendToServer(payload) {
+    fetch(GAS_URL, { 
+      method: 'POST', 
+      body: JSON.stringify({ action: 'uploadAndSave', payload: payload }) 
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(res.status === "success") {
+        alert("บันทึกข้อมูลเรียบร้อยแล้ว");
+        location.reload();
+      } else {
+        alert("เกิดข้อผิดพลาด: " + res.message);
+        $('#btnSave').prop('disabled', false).text('💾 บันทึกข้อมูล');
+      }
+    });
+  }
+</script>
 </body>
 </html>
