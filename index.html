@@ -126,48 +126,60 @@
     .doc-title { font-size: 1rem; }
   }
 
- /* --- Pagination --- */
+ /* --- Pagination ปรับปรุงใหม่ --- */
+  .pagination {
+    gap: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+  }
+
   .pagination .page-link { 
     border: none; 
     color: #5f6368; 
-    margin: 0 5px; 
     border-radius: 12px !important; 
-    height: 40px; 
-    /* ปรับเป็น auto เพื่อให้รองรับข้อความ "ก่อนหน้า/ถัดไป" ได้สวยงาม */
-    width: auto; 
-    min-width: 40px; 
-    padding: 0 15px; 
+    height: 44px; 
+    min-width: 44px;
+    padding: 0 20px; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
     background: #f1f3f4; 
-    font-size: 0.95rem;
-    transition: 0.2s;
-    text-decoration: none; /* ลบเส้นใต้ลิงก์ */
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
     cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   }
 
-  /* สไตล์เมื่อปุ่มถูกปิดใช้งาน */
+  /* ส่วนแสดงเลขหน้าปัจจุบัน */
+  .page-info-text {
+    background: transparent !important;
+    color: var(--text-main) !important;
+    font-weight: 600 !important;
+    cursor: default !important;
+  }
+
+  .pagination .page-link:hover:not(.disabled) {
+    background: var(--school-red);
+    color: white !important;
+    transform: translateY(-2px);
+  }
+
   .pagination .page-item.disabled .page-link {
     background: #f8f9fa;
     color: #ccc;
-    cursor: not-allowed;
-    pointer-events: none; /* ป้องกันการคลิกซ้ำซ้อน */
+    opacity: 0.6;
+    box-shadow: none;
   }
 
-  /* สไตล์เมื่อเอาเมาส์ไปวาง */
-  .pagination .page-link:hover:not(.disabled) {
-    background: #dadce0;
-    color: var(--school-red);
-  }
-
-  /* ปรับหน้าจอเล็ก: ลดระยะห่างปุ่มลงนิดนึงเพื่อให้พอดีจอ */
+  /* ปรับแต่งสำหรับมือถือโดยเฉพาะ */
   @media (max-width: 576px) {
+    .pagination { gap: 5px; }
     .pagination .page-link {
-      margin: 0 3px;
-      padding: 0 10px;
-      font-size: 0.85rem;
+      padding: 0 12px;
+      height: 40px;
+      font-size: 0.9rem;
     }
+    /* ซ่อนข้อความในมือถือ เหลือแค่ลูกศรเพื่อให้ไม่ล้นจอ */
+    .btn-text { display: none; } 
   }
 </style>
 </head>
@@ -369,43 +381,42 @@ function renderPagination() {
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     let html = '';
     
-    // ถ้ามีหน้าเดียว ไม่ต้องแสดงปุ่มเลขหน้า
     if(totalPages <= 1) { 
       $('#pagination').html(''); 
       return; 
     }
 
-    // ปุ่ม "ก่อนหน้า" (จะกดไม่ได้ถ้าอยู่ที่หน้า 1)
+    // ปุ่มก่อนหน้า
     const prevDisabled = (currentPage === 1) ? 'disabled' : '';
     html += `
       <li class="page-item ${prevDisabled}">
-        <a class="page-link px-3" href="#" onclick="changePage(event, ${currentPage - 1})">
-          <i class="bi bi-chevron-left me-1"></i> ก่อนหน้า
+        <a class="page-link" href="#" onclick="changePage(event, ${currentPage - 1})">
+          <i class="bi bi-chevron-left"></i> <span class="btn-text ms-1">ก่อนหน้า</span>
         </a>
       </li>
     `;
 
-    // แสดงสถานะหน้าปัจจุบัน (เช่น หน้า 1 จาก 5)
+    // เลขหน้าปัจจุบัน
     html += `
-      <li class="page-item disabled">
-        <span class="page-link bg-transparent border-0 text-dark fw-bold">
-          หน้า ${currentPage} / ${totalPages}
+      <li class="page-item">
+        <span class="page-link page-info-text">
+          ${currentPage} / ${totalPages}
         </span>
       </li>
     `;
 
-    // ปุ่ม "ถัดไป" (จะกดไม่ได้ถ้าอยู่ที่หน้าสุดท้าย)
+    // ปุ่มถัดไป
     const nextDisabled = (currentPage === totalPages) ? 'disabled' : '';
     html += `
       <li class="page-item ${nextDisabled}">
-        <a class="page-link px-3" href="#" onclick="changePage(event, ${currentPage + 1})">
-          ถัดไป <i class="bi bi-chevron-right ms-1"></i>
+        <a class="page-link" href="#" onclick="changePage(event, ${currentPage + 1})">
+          <span class="btn-text me-1">ถัดไป</span> <i class="bi bi-chevron-right"></i>
         </a>
       </li>
     `;
 
     $('#pagination').html(html);
-  }
+}
 
   function changePage(e, page) { e.preventDefault(); currentPage = page; renderContent(); window.scrollTo({top: 0, behavior: 'smooth'}); }
 
