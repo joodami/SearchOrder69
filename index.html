@@ -217,13 +217,13 @@
     });
   });
 
-  function formatThaiDate(dateString) {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString;
-    const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear() + 543}`;
-  }
+function formatThaiDate(dateString) {
+  // ถ้าไม่มีข้อมูล ให้ส่งขีด (-) กลับไป
+  if (!dateString) return "-";
+  
+  // ส่งค่ากลับไปตามที่ได้รับมาจาก Google Sheets โดยตรง ไม่ต้องแปลง format
+  return dateString; 
+}
 
   function loadData() {
     const year = $('#yearSelect').val().replace('ปี ', '');
