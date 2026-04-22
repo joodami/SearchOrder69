@@ -239,7 +239,14 @@ function formatThaiDate(dateString) {
 
   function loadData() {
     const year = $('#yearSelect').val().replace('ปี ', '');
-    $('#dataCount').text('กำลังโหลดข้อมูล...');
+    
+    // --- ส่วนที่เพิ่มเข้าไปเพื่อเคลียร์หน้าจอทันที ---
+    $('#tableBody').html('<tr><td colspan="4" class="text-center p-5 text-muted">กำลังโหลดข้อมูลปี ' + year + '...</td></tr>');
+    $('#mobileContainer').html('<div class="text-center p-5 text-muted">กำลังโหลดข้อมูลปี ' + year + '...</div>');
+    $('#dataCount').text('กำลังโหลด...');
+    $('#pagination').html(''); // ซ่อนหน้าเลขหน้าไปก่อน
+    // -------------------------------------------
+
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getData', year: year}) })
     .then(res => res.json())
     .then(data => {
@@ -249,7 +256,7 @@ function formatThaiDate(dateString) {
         return noB - noA;
       });
       filteredData = [...fullData];
-      renderContent();
+      renderContent(); // เมื่อโหลดเสร็จ ฟังก์ชันนี้จะนำข้อมูลใหม่มาแสดงแทนที่ข้อความกำลังโหลดเองค่ะ
     });
   }
 
