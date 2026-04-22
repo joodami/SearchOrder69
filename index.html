@@ -53,16 +53,34 @@
     display: flex;
     align-items: center;
     transition: all 0.3s;
-    border: 2px solid transparent;
+    /* ปรับ border เป็นพื้นฐานเพื่อไม่ให้เกิดกรอบซ้อน */
+    border: 1px solid transparent; 
   }
+
   .modern-search-bar input {
     background: transparent;
     border: none;
     padding: 8px;
     width: 100%;
-    outline: none;
     font-size: 1rem;
     font-family: 'Kanit', sans-serif;
+    /* แก้ไขปัญหาช่องค้นหามีกรอบสี่เหลี่ยมในมือถือ */
+    outline: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: none !important;
+  }
+
+  /* ป้องกันการเกิดเส้นขอบเวลาคลิก (Focus) */
+  .modern-search-bar input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .modern-search-bar:focus-within {
+    background: #fff;
+    border-color: var(--school-red);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
 
   /* --- Content --- */
@@ -72,9 +90,9 @@
   .table-app th { padding: 15px; font-size: 0.9rem; color: #70757a; border-bottom: 2px solid #f1f1f1; font-weight: 600; }
   .table-app td { padding: 18px 15px; border-bottom: 1px solid #f1f1f1; vertical-align: middle; }
 
-  /* ปรับเลขที่คำสั่งให้เท่ากับขนาดชื่อเรื่องเดิม */
+  /* เลขที่คำสั่ง (ขนาดเท่าชื่อเรื่องตามที่แจ้ง) */
   .doc-no-badge { 
-    font-size: 1.05rem; /* เท่ากับขนาดชื่อเรื่อง */
+    font-size: 1.05rem; 
     color: var(--school-red); 
     font-weight: 600;
     background: #fff0f0;
@@ -84,7 +102,7 @@
   }
 
   .doc-title { 
-    font-size: 1.05rem; /* ขนาดเดิมที่คุณพอใจ */
+    font-size: 1.05rem; 
     font-weight: 500; 
     color: var(--text-main); 
     display: block; 
@@ -96,7 +114,7 @@
   .btn-add-minimal { background: white; color: var(--school-red); border: 1.5px solid var(--school-red); border-radius: 20px; padding: 6px 15px; font-weight: 500; font-size: 0.9rem; }
   .btn-view-app { color: #5f6368; border: 1px solid #dadce0; border-radius: 8px; padding: 5px 15px; font-size: 0.9rem; font-weight: 500; text-decoration: none; }
   
-  /* --- Mobile Style (คงเดิมไว้) --- */
+  /* --- Mobile Style --- */
   .btn-mobile-open { background: var(--school-red); color: white !important; border-radius: 8px; padding: 6px 15px; font-size: 0.85rem; text-decoration: none; }
   .mobile-doc-item { padding: 18px; border-bottom: 1px solid #f1f1f1; }
   .mobile-doc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
