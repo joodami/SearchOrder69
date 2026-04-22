@@ -325,13 +325,45 @@ function formatThaiDate(dateString) {
     renderPagination();
   }
 
-  function renderPagination() {
+function renderPagination() {
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     let html = '';
-    if(totalPages <= 1) { $('#pagination').html(''); return; }
-    for (let i = 1; i <= totalPages; i++) {
-      html += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(event, ${i})">${i}</a></li>`;
+    
+    // ถ้ามีหน้าเดียว ไม่ต้องแสดงปุ่มเลขหน้า
+    if(totalPages <= 1) { 
+      $('#pagination').html(''); 
+      return; 
     }
+
+    // ปุ่ม "ก่อนหน้า" (จะกดไม่ได้ถ้าอยู่ที่หน้า 1)
+    const prevDisabled = (currentPage === 1) ? 'disabled' : '';
+    html += `
+      <li class="page-item ${prevDisabled}">
+        <a class="page-link px-3" href="#" onclick="changePage(event, ${currentPage - 1})">
+          <i class="bi bi-chevron-left me-1"></i> ก่อนหน้า
+        </a>
+      </li>
+    `;
+
+    // แสดงสถานะหน้าปัจจุบัน (เช่น หน้า 1 จาก 5)
+    html += `
+      <li class="page-item disabled">
+        <span class="page-link bg-transparent border-0 text-dark fw-bold">
+          หน้า ${currentPage} / ${totalPages}
+        </span>
+      </li>
+    `;
+
+    // ปุ่ม "ถัดไป" (จะกดไม่ได้ถ้าอยู่ที่หน้าสุดท้าย)
+    const nextDisabled = (currentPage === totalPages) ? 'disabled' : '';
+    html += `
+      <li class="page-item ${nextDisabled}">
+        <a class="page-link px-3" href="#" onclick="changePage(event, ${currentPage + 1})">
+          ถัดไป <i class="bi bi-chevron-right ms-1"></i>
+        </a>
+      </li>
+    `;
+
     $('#pagination').html(html);
   }
 
