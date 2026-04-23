@@ -1,259 +1,199 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ระบบสืบค้นคำสั่ง - โรงเรียนพิมานพิทยาสรรค์</title>
-  
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  
- <style>
-  :root { 
-    --primary: #1a5276; /* สีน้ำเงินเข้ม PS-Sarabun */
-    --accent: #2980b9;
-    --bg-body: #f8fafc;
-    --bg-input: #f1f3f4;
-    --text-main: #1e293b;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ระบบสืบค้นคำสั่ง - โรงเรียนพิมานพิทยาสรรค์</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root { 
+            --primary: #1a5276; /* สีน้ำเงินเข้ม PS-Sarabun */
+            --accent: #2980b9;
+            --bg-body: #f8fafc;
+            --bg-input: #f1f3f4;
+            --main-gradient: linear-gradient(135deg, #1a5276, #2980b9);
+        }
 
-  body { 
-    background-color: var(--bg-body); 
-    font-family: 'Prompt', sans-serif; 
-    color: var(--text-main);
-    letter-spacing: 0.1px;
-  }
-  
-  /* --- App Header: ดีไซน์เดียวกับหน้าหลัก --- */
-  .app-header {
-    background: #ffffff;
-    text-align: center;
-    border-bottom: 4px solid var(--primary);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    padding: 10px 20px 5px 20px;
-  }
-  .app-logo { height: 50px; margin-bottom: 5px; }
-  .app-brand-name { font-weight: 700; font-size: 1.6rem; color: var(--primary); margin: 0; line-height: 1.2; }
-  .school-subtitle { font-weight: 600; font-size: 0.9rem; color: #475569; }
+        body { 
+            background-color: var(--bg-body); 
+            font-family: 'Prompt', sans-serif; 
+            color: #1e293b;
+            margin: 0; padding: 0;
+        }
+        
+        /* --- App Header: ล็อกมาตรฐาน Hub --- */
+        .app-header {
+            background: #ffffff;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
 
-  @media (max-width: 768px) {
-    .app-header { padding: 8px 10px 5px 10px; }
-    .app-logo { height: 40px; }
-    .app-brand-name { font-size: 1.2rem; }
-    .school-subtitle { font-size: 0.75rem; }
-  }
+        @media (max-width: 1023px) {
+            .app-header { padding: 8px 10px 0 10px; }
+            .school-logo { height: 40px; margin-bottom: 2px; }
+            .app-title { font-size: 1.2rem; line-height: 1.1; color: var(--primary); font-weight: 700; margin: 0; }
+            .app-subtitle { font-size: 0.75rem; margin-top: 2px; margin-bottom: 5px; font-weight: 600; color: #475569; }
+        }
 
-  /* --- Sticky Search Bar --- */
-  .search-wrapper {
-    padding: 15px 0;
-    background: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
+        @media (min-width: 1024px) {
+            .app-header { padding: 10px 20px 5px 20px; } 
+            .school-logo { height: 55px; margin-bottom: 5px; }
+            .app-title { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin: 0; }
+            .app-subtitle { font-size: 0.95rem; margin-top: 2px; margin-bottom: 5px; color: #475569; }
+        }
 
-  .modern-search-bar {
-    background: var(--bg-input);
-    border-radius: 12px;
-    padding: 5px 15px;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s;
-    border: 2px solid transparent; 
-  }
+        /* --- Search Bar & Year Select --- */
+        .search-wrapper {
+            padding: 15px 0;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e2e8f0;
+        }
 
-  .modern-search-bar input {
-    background: transparent;
-    border: none;
-    padding: 8px;
-    width: 100%;
-    font-size: 1rem;
-    font-family: 'Prompt', sans-serif;
-    outline: none !important;
-    box-shadow: none !important;
-  }
+        .modern-search-bar {
+            background: var(--bg-input);
+            border-radius: 12px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
 
-  .modern-search-bar:focus-within {
-    background: #fff;
-    border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(26, 82, 118, 0.08);
-  }
+        .modern-search-bar input {
+            background: transparent; border: none; padding: 8px; width: 100%; font-size: 0.95rem; outline: none;
+        }
 
-  /* --- Content --- */
-  .section-info { margin: 20px 0 10px 0; color: #64748b; font-weight: 500; font-size: 0.85rem; }
+        .modern-search-bar:focus-within {
+            background: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(26, 82, 118, 0.1);
+        }
 
-  .table-app { width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-  .table-app th { padding: 15px; font-size: 0.9rem; color: var(--primary); border-bottom: 2px solid #f1f5f9; font-weight: 600; background: #f8fafc; }
-  .table-app td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        /* --- Content Style --- */
+        .table-app { width: 100%; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .table-app th { padding: 15px; font-size: 0.9rem; color: var(--primary); background: #f8fafc; border-bottom: 2px solid #f1f5f9; }
+        .table-app td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 
-  /* เลขที่คำสั่ง (ธีมน้ำเงินเข้ม) */
-  .doc-no-badge { 
-    font-size: 1rem; 
-    color: var(--primary); 
-    font-weight: 600;
-    background: #eef2ff;
-    padding: 4px 12px;
-    border-radius: 8px;
-    display: inline-block;
-  }
+        .doc-no-badge { 
+            font-size: 0.9rem; color: var(--primary); font-weight: 700; background: #eef2ff; padding: 4px 12px; border-radius: 8px;
+        }
 
-  .doc-title { 
-    font-size: 1rem; 
-    font-weight: 500; 
-    color: #334155; 
-    display: block; 
-    line-height: 1.5; 
-    text-decoration: none; 
-    transition: color 0.2s;
-  }
-  .doc-title:hover { color: var(--primary); }
+        .doc-title { font-size: 1rem; font-weight: 500; color: #334155; text-decoration: none; transition: 0.2s; line-height: 1.4; }
+        .doc-title:hover { color: var(--primary); }
 
-  /* --- Buttons --- */
-  .btn-add-minimal { 
-    background: var(--primary); 
-    color: white; 
-    border: none; 
-    border-radius: 10px; 
-    padding: 8px 18px; 
-    font-weight: 600; 
-    font-size: 0.9rem; 
-    transition: all 0.2s;
-  }
-  .btn-add-minimal:hover { background: var(--accent); transform: translateY(-2px); }
+        .btn-add-minimal { 
+            background: var(--main-gradient); color: white; border: none; border-radius: 10px; padding: 8px 18px; font-weight: 600; font-size: 0.9rem; transition: 0.2s;
+        }
+        .btn-add-minimal:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(26, 82, 118, 0.2); }
 
-  .btn-view-app { color: #64748b; border: 1px solid #e2e8f0; border-radius: 8px; padding: 5px 15px; font-size: 0.85rem; font-weight: 500; text-decoration: none; }
-  .btn-view-app:hover { background: var(--primary); color: white; border-color: var(--primary); }
-  
-  /* --- Mobile Style --- */
-  .btn-mobile-open { background: var(--primary); color: white !important; border-radius: 8px; padding: 6px 15px; font-size: 0.85rem; text-decoration: none; font-weight: 600; }
-  .mobile-doc-item { padding: 18px; border-bottom: 1px solid #f1f5f9; background: white; margin-bottom: 2px; }
-  .mobile-doc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        /* --- Mobile List --- */
+        .mobile-doc-item { padding: 18px; background: white; border-bottom: 1px solid #f1f5f9; }
+        .btn-mobile-open { background: var(--main-gradient); color: white !important; border-radius: 8px; padding: 6px 15px; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-block; }
 
-  @media (max-width: 768px) {
-    .doc-no-badge { font-size: 0.85rem; padding: 3px 10px; }
-    .doc-title { font-size: 0.95rem; font-weight: 600; }
-  }
+        /* --- Pagination --- */
+        .pagination .page-link { border: none; color: #64748b; border-radius: 10px !important; margin: 0 3px; font-weight: 600; }
+        .pagination .page-item.active .page-link { background: var(--primary); color: white; }
 
-  /* --- Pagination (ธีมน้ำเงิน) --- */
-  .pagination .page-link { 
-    border: none; 
-    color: #64748b; 
-    border-radius: 10px !important; 
-    height: 40px; 
-    min-width: 40px;
-    padding: 0 15px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    background: white; 
-    font-size: 0.9rem;
-    margin: 0 3px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-  }
-
-  .pagination .page-link:hover:not(.disabled) {
-    background: var(--primary);
-    color: white !important;
-  }
-
-  .page-info-text { font-weight: 600; color: var(--primary) !important; background: transparent !important; }
-
-  /* --- Modal Style --- */
-  .modal-content { border-radius: 20px; border: none; }
-  .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 0.25rem rgba(26, 82, 118, 0.1); }
-</style>
+        .modal-content { border-radius: 20px; border: none; overflow: hidden; }
+        .modal-header { background: var(--main-gradient); color: white; border: none; }
+    </style>
 </head>
 <body>
 
 <header class="app-header">
-    <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" class="app-logo" alt="Logo">
-    <div>
-      <h1 class="app-brand-name">PS-Sarabun</h1>
-      <span class="school-subtitle">ระบบสืบค้นคำสั่งโรงเรียนพิมานพิทยาสรรค์</span>
-    </div>
+    <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
+    <h1 class="app-title">PS-Sarabun</h1>
+    <p class="app-subtitle">ระบบสืบค้นคำสั่ง โรงเรียนพิมานพิทยาสรรค์</p>
 </header>
 
 <section class="search-wrapper shadow-sm">
-  <div class="container">
-    <div class="row align-items-center g-2">
-      <div class="col-5 col-md-2">
-         <select id="yearSelect" class="form-select border-0 fw-bold" onchange="loadData()" style="color: var(--primary); font-size: 1rem; cursor: pointer; background-color: transparent; font-family: 'Prompt', sans-serif;">
-         </select>
-      </div>
-      <div class="col-12 col-md-7 order-3 order-md-2">
-        <div class="modern-search-bar">
-          <i class="bi bi-search text-muted"></i>
-          <input type="text" id="searchInput" placeholder="ค้นหาเลขที่หรือชื่อคำสั่ง..." onkeyup="handleSearch()">
-          <i class="bi bi-x-circle-fill text-muted" id="resetBtn" onclick="resetSearch()" style="display:none; cursor:pointer;"></i>
+    <div class="container">
+        <div class="row align-items-center g-2">
+            <div class="col-4 col-md-2">
+                <select id="yearSelect" class="form-select border-0 fw-bold" onchange="loadData()" style="color: var(--primary); cursor: pointer;">
+                </select>
+            </div>
+            <div class="col-12 col-md-7 order-3 order-md-2">
+                <div class="modern-search-bar">
+                    <i class="bi bi-search text-muted"></i>
+                    <input type="text" id="searchInput" placeholder="ค้นหาเลขที่หรือชื่อคำสั่ง..." onkeyup="handleSearch()">
+                    <i class="bi bi-x-circle-fill text-muted" id="resetBtn" onclick="resetSearch()" style="display:none; cursor:pointer;"></i>
+                </div>
+            </div>
+            <div class="col-8 col-md-3 order-2 order-md-3 text-end">
+                <button class="btn-add-minimal" data-bs-toggle="modal" data-bs-target="#addModal">
+                    <i class="bi bi-plus-lg me-1"></i> เพิ่มคำสั่ง
+                </button>
+            </div>
         </div>
-      </div>
-      <div class="col-7 col-md-3 order-2 order-md-3 text-end">
-        <button class="btn-add-minimal" data-bs-toggle="modal" data-bs-target="#addModal">
-          <i class="bi bi-plus-lg me-1"></i> เพิ่มข้อมูล
-        </button>
-      </div>
     </div>
-  </div>
 </section>
 
-<div class="container mt-2">
-  <div class="section-info d-flex justify-content-between">
-      <span id="dataCount">กำลังโหลด...</span>
-  </div>
+<div class="container mt-3">
+    <div class="d-flex justify-content-between mb-2 px-2">
+        <span id="dataCount" class="small fw-bold text-muted">กำลังโหลด...</span>
+    </div>
 
-  <div class="d-none d-md-block">
-    <table class="table-app">
-      <thead>
-        <tr>
-          <th width="15%" class="text-center">เลขที่คำสั่ง</th>
-          <th width="55%">ชื่อเรื่องคำสั่ง</th>
-          <th width="18%">วันที่ประกาศ</th>
-          <th width="12%" class="text-center">เอกสาร</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
+    <div class="d-none d-md-block">
+        <table class="table-app">
+            <thead>
+                <tr>
+                    <th width="15%" class="text-center">เลขที่คำสั่ง</th>
+                    <th width="55%">ชื่อเรื่องคำสั่ง</th>
+                    <th width="18%">วันที่ประกาศ</th>
+                    <th width="12%" class="text-center">เอกสาร</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 
-  <div id="mobileContainer" class="d-md-none border-top rounded-3 overflow-hidden shadow-sm"></div>
+    <div id="mobileContainer" class="d-md-none border rounded-3 overflow-hidden shadow-sm"></div>
 
-  <nav class="mt-4 pb-5">
-    <ul class="pagination justify-content-center" id="pagination"></ul>
-  </nav>
+    <nav class="mt-4 pb-5">
+        <ul class="pagination justify-content-center" id="pagination"></ul>
+    </nav>
 </div>
 
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow-lg">
-      <div class="modal-header border-0 p-4 pb-0">
-        <h5 class="modal-title fw-bold" style="color: var(--primary);">บันทึกคำสั่งใหม่</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body p-4">
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-muted">เลขที่คำสั่ง</label>
-          <input type="text" id="m_no" class="form-control bg-light border-0 py-2" placeholder="เช่น 001/2569" style="border-radius:10px;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-plus me-2"></i>บันทึกคำสั่งใหม่</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">เลขที่คำสั่ง</label>
+                    <input type="text" id="m_no" class="form-control" placeholder="เช่น 001/2569">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">หัวข้อคำสั่ง</label>
+                    <textarea id="m_title" class="form-control" rows="2" placeholder="ระบุชื่อเรื่องคำสั่ง"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">วันที่ลงนาม</label>
+                    <input type="text" id="m_date" class="form-control" placeholder="เช่น 21 เม.ย. 69">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label small fw-bold text-muted">แนบไฟล์ PDF</label>
+                    <input type="file" id="m_file" class="form-control" accept=".pdf">
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">ยกเลิก</button>
+                <button type="button" id="btnSave" class="btn px-4 text-white" onclick="handleSave()" style="background: var(--primary); border-radius:10px;">💾 บันทึกข้อมูล</button>
+            </div>
         </div>
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-muted">หัวข้อคำสั่ง</label>
-          <input type="text" id="m_title" class="form-control bg-light border-0 py-2" placeholder="ระบุชื่อเรื่องคำสั่ง" style="border-radius:10px;">
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-muted">วันที่ลงนาม</label>
-          <input type="text" id="m_date" class="form-control bg-light border-0 py-2" placeholder="เช่น 21 เม.ย. 69" style="border-radius:10px;">
-        </div>
-        <div class="mb-2">
-          <label class="form-label small fw-bold text-muted">แนบไฟล์เอกสาร</label>
-          <input type="file" id="m_file" class="form-control bg-light border-0 py-2" style="border-radius:10px;">
-        </div>
-      </div>
-      <div class="modal-footer border-0 p-4 pt-0">
-        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius:10px;">ยกเลิก</button>
-        <button type="button" id="btnSave" class="btn px-4" onclick="handleSave()" style="border-radius:10px; background: var(--primary); color:white;">💾 บันทึกข้อมูล</button>
-      </div>
     </div>
-  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -261,137 +201,144 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-  // Script ส่วนเดิมทั้งหมดคงไว้
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbwol0yeigIcjcxZ0UtCf3RpAP2VBE66Xk8eeK18Ae7Oy2JIXB4LFJrEN0leIS4rANOUzw/exec";
-  
-  let fullData = [];
-  let filteredData = [];
-  let currentPage = 1;
-  const rowsPerPage = 15;
-
-  $(document).ready(function() {
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getYears'}) })
-    .then(res => res.json())
-    .then(years => {
-      const yearSelect = $('#yearSelect');
-      years.forEach(y => yearSelect.append(`<option value="${y}">ปี ${y}</option>`));
-      loadData();
-    });
-  });
-
-  function formatThaiDate(dateString) {
-    return dateString || "-";
-  }
-
-  function loadData() {
-    const year = $('#yearSelect').val().replace('ปี ', '');
-    $('#tableBody').html('<tr><td colspan="4" class="text-center p-5 text-muted">กำลังโหลดข้อมูลปี ' + year + '...</td></tr>');
-    $('#mobileContainer').html('<div class="text-center p-5 text-muted">กำลังโหลดข้อมูล...</div>');
-    $('#dataCount').text('กำลังโหลด...');
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwol0yeigIcjcxZ0UtCf3RpAP2VBE66Xk8eeK18Ae7Oy2JIXB4LFJrEN0leIS4rANOUzw/exec";
     
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getData', year: year}) })
-    .then(res => res.json())
-    .then(data => {
-      fullData = data.sort((a, b) => {
-        const noA = parseFloat(a.no.toString().split('/')[0]) || 0;
-        const noB = parseFloat(b.no.toString().split('/')[0]) || 0;
-        return noB - noA;
-      });
-      filteredData = [...fullData];
-      renderContent();
+    let fullData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const rowsPerPage = 15;
+
+    $(document).ready(function() {
+        fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getYears'}) })
+        .then(res => res.json())
+        .then(years => {
+            const yearSelect = $('#yearSelect');
+            years.forEach(y => yearSelect.append(`<option value="${y}">ปี ${y}</option>`));
+            loadData();
+        });
     });
-  }
 
-  function handleSearch() {
-    const q = $('#searchInput').val().toLowerCase();
-    filteredData = fullData.filter(i => i.no.toString().toLowerCase().includes(q) || i.title.toLowerCase().includes(q));
-    $('#resetBtn').toggle(q.length > 0);
-    currentPage = 1;
-    renderContent();
-  }
-
-  function resetSearch() {
-    $('#searchInput').val('');
-    $('#resetBtn').hide();
-    filteredData = [...fullData];
-    currentPage = 1;
-    renderContent();
-  }
-
-  function renderContent() {
-    $('#dataCount').text(`พบ ${filteredData.length} รายการ`);
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const items = filteredData.slice(start, end);
-
-    $('#tableBody').html(items.map(r => `
-      <tr>
-        <td class="text-center"><span class="doc-no-badge">${r.no}</span></td>
-        <td><a href="${r.link}" target="_blank" class="doc-title">${r.title}</a></td>
-        <td class="text-muted" style="font-size:0.85rem;"><i class="bi bi-calendar3 me-2"></i>${formatThaiDate(r.date)}</td>
-        <td class="text-center"><a href="${r.link}" target="_blank" class="btn-view-app">เปิดดู</a></td>
-      </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูล</td></tr>');
-
-    $('#mobileContainer').html(items.map(r => `
-      <div class="mobile-doc-item">
-        <div class="mobile-doc-header">
-          <span class="doc-no-badge">ที่ ${r.no}</span>
-          <small class="text-muted">${formatThaiDate(r.date)}</small>
-        </div>
-        <div class="doc-title mb-3">${r.title}</div>
-        <div class="text-end">
-          <a href="${r.link}" target="_blank" class="btn-mobile-open shadow-sm">
-            <i class="bi bi-file-earmark-pdf me-1"></i> เปิดดูเอกสาร
-          </a>
-        </div>
-      </div>`).join('') || '<div class="text-center p-5 text-muted">ไม่พบข้อมูล</div>');
-
-    renderPagination();
-  }
-
-  function renderPagination() {
-    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-    let html = '';
-    if(totalPages <= 1) { $('#pagination').html(''); return; }
-
-    const prevDisabled = (currentPage === 1) ? 'disabled' : '';
-    html += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" onclick="changePage(event, ${currentPage - 1})"><i class="bi bi-chevron-left"></i></a></li>`;
-    html += `<li class="page-item"><span class="page-link page-info-text">${currentPage} / ${totalPages}</span></li>`;
-    const nextDisabled = (currentPage === totalPages) ? 'disabled' : '';
-    html += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" onclick="changePage(event, ${currentPage + 1})"><i class="bi bi-chevron-right"></i></a></li>`;
-
-    $('#pagination').html(html);
-  }
-
-  function changePage(e, page) { e.preventDefault(); currentPage = page; renderContent(); window.scrollTo({top: 0, behavior: 'smooth'}); }
-
-  function handleSave() {
-    const fileInput = document.getElementById('m_file');
-    if(!$('#m_no').val() || !$('#m_title').val()) {
-        Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูลให้ครบ', confirmButtonColor: '#1a5276' });
-        return;
+    function loadData() {
+        const year = $('#yearSelect').val().replace('ปี ', '');
+        $('#tableBody').html('<tr><td colspan="4" class="text-center p-5 text-muted"><div class="spinner-border spinner-border-sm me-2"></div> กำลังโหลดข้อมูล...</td></tr>');
+        $('#mobileContainer').html('<div class="text-center p-5 text-muted">กำลังโหลดข้อมูล...</div>');
+        
+        fetch(GAS_URL, { method: 'POST', body: JSON.stringify({action: 'getData', year: year}) })
+        .then(res => res.json())
+        .then(data => {
+            fullData = data.sort((a, b) => {
+                const noA = parseInt(a.no.toString().split('/')[0]) || 0;
+                const noB = parseInt(b.no.toString().split('/')[0]) || 0;
+                return noB - noA;
+            });
+            filteredData = [...fullData];
+            renderContent();
+        });
     }
-    Swal.fire({ title: 'กำลังบันทึก...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-    const payload = { year: $('#yearSelect').val().replace('ปี ', ''), no: $('#m_no').val(), title: $('#m_title').val(), date: $('#m_date').val() };
-    if (fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) { payload.fileBase64 = e.target.result.split(',')[1]; payload.fileMime = file.type; payload.fileName = file.name; sendToServer(payload); };
-      reader.readAsDataURL(file);
-    } else { sendToServer(payload); }
-  }
 
-  function sendToServer(payload) {
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'uploadAndSave', payload: payload }) })
-    .then(res => res.json())
-    .then(res => {
-      if(res.status === "success") {
-        Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', confirmButtonColor: '#1a5276', timer: 2000 }).then(() => { location.reload(); });
-      } else {
-        Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message, confirmButtonColor: '#1a5276' });
-      }
-    });
-  }
+    function handleSearch() {
+        const q = $('#searchInput').val().toLowerCase();
+        filteredData = fullData.filter(i => i.no.toString().toLowerCase().includes(q) || i.title.toLowerCase().includes(q));
+        $('#resetBtn').toggle(q.length > 0);
+        currentPage = 1;
+        renderContent();
+    }
+
+    function resetSearch() {
+        $('#searchInput').val('');
+        $('#resetBtn').hide();
+        filteredData = [...fullData];
+        currentPage = 1;
+        renderContent();
+    }
+
+    function renderContent() {
+        $('#dataCount').text(`พบทั้งหมด ${filteredData.length} รายการ`);
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const items = filteredData.slice(start, end);
+
+        // Desktop Table Render
+        $('#tableBody').html(items.map(r => `
+            <tr>
+                <td class="text-center"><span class="doc-no-badge">${r.no}</span></td>
+                <td><a href="${r.link}" target="_blank" class="doc-title">${r.title}</a></td>
+                <td class="text-muted small"><i class="bi bi-calendar3 me-2"></i>${r.date || '-'}</td>
+                <td class="text-center">
+                    <a href="${r.link}" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill px-3">เปิดดู</a>
+                </td>
+            </tr>`).join('') || '<tr><td colspan="4" class="text-center p-5 text-muted">ไม่พบข้อมูล</td></tr>');
+
+        // Mobile List Render
+        $('#mobileContainer').html(items.map(r => `
+            <div class="mobile-doc-item">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="doc-no-badge">ที่ ${r.no}</span>
+                    <small class="text-muted">${r.date || '-'}</small>
+                </div>
+                <div class="doc-title fw-bold mb-3">${r.title}</div>
+                <div class="text-end">
+                    <a href="${r.link}" target="_blank" class="btn-mobile-open shadow-sm">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> เปิดดูเอกสาร
+                    </a>
+                </div>
+            </div>`).join('') || '<div class="text-center p-5 text-muted">ไม่พบข้อมูล</div>');
+
+        renderPagination();
+    }
+
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+        let html = '';
+        if(totalPages <= 1) { $('#pagination').html(''); return; }
+
+        html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="changePage(event, ${currentPage - 1})">ก่อนหน้า</a></li>`;
+        html += `<li class="page-item active"><span class="page-link">${currentPage} / ${totalPages}</span></li>`;
+        html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="changePage(event, ${currentPage + 1})">ถัดไป</a></li>`;
+
+        $('#pagination').html(html);
+    }
+
+    function changePage(e, page) { e.preventDefault(); currentPage = page; renderContent(); window.scrollTo({top: 0, behavior: 'smooth'}); }
+
+    function handleSave() {
+        const fileInput = document.getElementById('m_file');
+        if(!$('#m_no').val() || !$('#m_title').val()) {
+            Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูลให้ครบ' }); return;
+        }
+        Swal.fire({ title: 'กำลังบันทึก...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+        
+        const payload = { 
+            year: $('#yearSelect').val().replace('ปี ', ''), 
+            no: $('#m_no').val(), 
+            title: $('#m_title').val(), 
+            date: $('#m_date').val() 
+        };
+
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                payload.fileBase64 = e.target.result.split(',')[1];
+                payload.fileMime = file.type;
+                payload.fileName = file.name;
+                sendToServer(payload);
+            };
+            reader.readAsDataURL(file);
+        } else { sendToServer(payload); }
+    }
+
+    function sendToServer(payload) {
+        fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'uploadAndSave', payload: payload }) })
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === "success") {
+                Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 2000 }).then(() => { location.reload(); });
+            } else {
+                Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message });
+            }
+        });
+    }
 </script>
 </body>
 </html>
